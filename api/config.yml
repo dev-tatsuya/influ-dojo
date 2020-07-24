@@ -1,0 +1,5 @@
+---
+server:
+  listener: :5000
+log:
+  dir: /var/log/influ-dojo
