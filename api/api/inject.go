@@ -1,11 +1,21 @@
 package api
 
 import (
-	"net/http"
+	domainClient "influ-dojo/api/domain/client"
+	infraClient "influ-dojo/api/infrastructure/client"
 )
 
-type Dependency struct {}
+type Dependency struct {
+	FollowerClient domainClient.Follower
+}
 
-func Inject(cfg *Config, client *http.Client) (*Dependency, error) {
-	return &Dependency{}, nil
+func Inject(cfg *Config) (*Dependency, error) {
+	return &Dependency{
+		FollowerClient: infraClient.NewFollower(
+			cfg.Twitter.AccessToken,
+			cfg.Twitter.AccessTokenSecret,
+			cfg.Twitter.ConsumerKey,
+			cfg.Twitter.ConsumerSecret,
+		),
+	}, nil
 }

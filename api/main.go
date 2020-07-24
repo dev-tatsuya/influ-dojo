@@ -6,7 +6,6 @@ import (
 	appLog "influ-dojo/api/log"
 	"log"
 	"math/rand"
-	"net/http"
 	"runtime"
 	"time"
 )
@@ -32,8 +31,7 @@ func main() {
 
 	log.Print("starting web server")
 
-	client := new(http.Client)
-	dependency, err := api.Inject(cfg, client)
+	dependency, err := api.Inject(cfg)
 	if err != nil {
 		log.Fatalf("%+v", err)
 	}

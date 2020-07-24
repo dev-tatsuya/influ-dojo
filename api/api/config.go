@@ -14,6 +14,12 @@ type Config struct {
 	Log struct {
 		Dir string `yaml:"dir"`
 	} `yaml:"log"`
+	Twitter struct {
+		AccessToken       string `yaml:"access_token"`
+		AccessTokenSecret string `yaml:"access_token_secret"`
+		ConsumerKey       string `yaml:"consumer_key"`
+		ConsumerSecret    string `yaml:"consumer_secret"`
+	} `yaml:"twitter"`
 }
 
 func LoadConfig(path string) (*Config, error) {
