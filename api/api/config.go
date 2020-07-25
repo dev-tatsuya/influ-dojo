@@ -12,7 +12,8 @@ type Config struct {
 		Listener string `yaml:"listener" validate:"required"`
 	} `yaml:"server"`
 	Log struct {
-		Dir string `yaml:"dir"`
+		Dir     string `yaml:"dir"`
+		IsDebug bool   `yaml:"is_debug"`
 	} `yaml:"log"`
 	Twitter struct {
 		AccessToken       string `yaml:"access_token"`
@@ -20,6 +21,13 @@ type Config struct {
 		ConsumerKey       string `yaml:"consumer_key"`
 		ConsumerSecret    string `yaml:"consumer_secret"`
 	} `yaml:"twitter"`
+	DB struct {
+		Host     string `yaml:"host" validate:"required"`
+		Port     int    `yaml:"port" validate:"required"`
+		User     string `yaml:"user" validate:"required"`
+		Password string `yaml:"password" validate:"required"`
+		Database string `yaml:"database" validate:"required"`
+	} `yaml:"db"`
 }
 
 func LoadConfig(path string) (*Config, error) {

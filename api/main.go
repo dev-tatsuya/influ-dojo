@@ -31,7 +31,19 @@ func main() {
 
 	log.Print("starting web server")
 
-	dependency, err := api.Inject(cfg)
+	db, err := api.ConnectDB(cfg)
+	if err != nil {
+		log.Fatalf("%+v", err)
+	}
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Printf("failed to close mdm database: %+v", err)
+			return
+		}
+		log.Printf("close mdm database")
+	}()
+
+	dependency, err := api.Inject(cfg, db)
 	if err != nil {
 		log.Fatalf("%+v", err)
 	}
