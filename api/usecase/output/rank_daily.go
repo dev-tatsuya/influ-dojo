@@ -19,6 +19,7 @@ type WorkUser struct {
 	ProfileImage           string `json:"profile_image"`
 	IncreaseTweetsCount    int    `json:"increase_tweets_count"`
 	IncreaseFavoritesCount int    `json:"increase_favorites_count"`
+	Point                  int    `json:"point"`
 }
 
 type ResultUser struct {
@@ -26,4 +27,5 @@ type ResultUser struct {
 	ScreenName             string `json:"screen_name"`
 	ProfileImage           string `json:"profile_image"`
 	IncreaseFollowersCount int    `json:"increase_followers_count"`
+	Point                  int    `json:"point"`
 }

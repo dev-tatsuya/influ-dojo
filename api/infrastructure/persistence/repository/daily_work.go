@@ -15,18 +15,32 @@ func NewDailyWork(db *gorm.DB) repository.DailyWork {
 	return &dailyWork{db}
 }
 
-func (dw *dailyWork) Load() ([]*domainModel.Work, error) {
+func (dw *dailyWork) LoadTop3() ([]*domainModel.Work, error) {
 	mdls := make([]*dataModel.DailyWork, 0)
-	if err := dw.DB.Find(&mdls).Error; err != nil {
+	if err := dw.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
 		return nil, err
 	}
 
+	count := 0
 	entities := make([]*domainModel.Work, len(mdls))
 	for _, mdl := range mdls {
+		if mdl.IncreaseTweetsCount == nil {
+			mdl.IncreaseTweetsCount = &count
+		}
+		if mdl.IncreaseFavoritesCount == nil {
+			mdl.IncreaseFavoritesCount = &count
+		}
+		if mdl.Point == nil {
+			mdl.Point = &count
+		}
+
 		entities = append(entities, &domainModel.Work{
-			UserID:         mdl.UserID,
-			TweetsCount:    mdl.TweetsCount,
-			FavoritesCount: mdl.FavoritesCount,
+			UserID:                 mdl.UserID,
+			TweetsCount:            mdl.TweetsCount,
+			IncreaseTweetsCount:    *mdl.IncreaseTweetsCount,
+			FavoritesCount:         mdl.FavoritesCount,
+			IncreaseFavoritesCount: *mdl.IncreaseFavoritesCount,
+			Point:                  *mdl.Point,
 		})
 	}
 
@@ -43,19 +57,36 @@ func (dw *dailyWork) LoadByID(userID string) (*domainModel.Work, error) {
 		return nil, err
 	}
 
+	count := 0
+	if mdl.IncreaseTweetsCount == nil {
+		mdl.IncreaseTweetsCount = &count
+	}
+	if mdl.IncreaseFavoritesCount == nil {
+		mdl.IncreaseFavoritesCount = &count
+	}
+	if mdl.Point == nil {
+		mdl.Point = &count
+	}
+
 	return &domainModel.Work{
-		UserID:         mdl.UserID,
-		TweetsCount:    mdl.TweetsCount,
-		FavoritesCount: mdl.FavoritesCount,
+		UserID:                 mdl.UserID,
+		TweetsCount:            mdl.TweetsCount,
+		IncreaseTweetsCount:    *mdl.IncreaseTweetsCount,
+		FavoritesCount:         mdl.FavoritesCount,
+		IncreaseFavoritesCount: *mdl.IncreaseFavoritesCount,
+		Point:                  *mdl.Point,
 	}, nil
 }
 
 func (dw *dailyWork) Save(entity *domainModel.Work) error {
 	mdl := &dataModel.DailyWork{
-		UserID:         entity.UserID,
-		TweetsCount:    entity.TweetsCount,
-		FavoritesCount: entity.FavoritesCount,
+		UserID:                 entity.UserID,
+		TweetsCount:            entity.TweetsCount,
+		IncreaseTweetsCount:    &entity.IncreaseTweetsCount,
+		FavoritesCount:         entity.FavoritesCount,
+		IncreaseFavoritesCount: &entity.IncreaseFavoritesCount,
+		Point:                  &entity.Point,
 	}
 
-	return dw.DB.Where("user_id = ?", mdl.UserID).Assign(mdl).FirstOrCreate(mdl).Error
+	return dw.DB.Where("user_id = ?", mdl.UserID).Assign(*mdl).FirstOrCreate(mdl).Error
 }

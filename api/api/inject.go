@@ -11,19 +11,21 @@ import (
 
 type Dependency struct {
 	FollowerClient  domainClient.Follower
+	BotClient       domainClient.Bot
 	UserRepo        repository.User
 	DailyWorkRepo   repository.DailyWork
 	DailyResultRepo repository.DailyResult
 }
 
 func Inject(cfg *Config, db *gorm.DB) (*Dependency, error) {
+	at := cfg.Twitter.AccessToken
+	ats := cfg.Twitter.AccessTokenSecret
+	ck := cfg.Twitter.ConsumerKey
+	cs := cfg.Twitter.ConsumerSecret
+
 	return &Dependency{
-		FollowerClient: infraClient.NewFollower(
-			cfg.Twitter.AccessToken,
-			cfg.Twitter.AccessTokenSecret,
-			cfg.Twitter.ConsumerKey,
-			cfg.Twitter.ConsumerSecret,
-		),
+		FollowerClient:  infraClient.NewFollower(at, ats, ck, cs),
+		BotClient:       infraClient.NewBot(at, ats, ck, cs),
 		UserRepo:        persistence.NewUser(db),
 		DailyWorkRepo:   persistence.NewDailyWork(db),
 		DailyResultRepo: persistence.NewDailyResult(db),

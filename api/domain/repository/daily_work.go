@@ -5,7 +5,7 @@ package repository
 import "influ-dojo/api/domain/model"
 
 type DailyWork interface {
-	Load() ([]*model.Work, error)
+	LoadTop3() ([]*model.Work, error)
 	LoadByID(userID string) (*model.Work, error)
 	Save(work *model.Work) error
 }

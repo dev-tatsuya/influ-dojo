@@ -1,7 +1,10 @@
 package model
 
 type Work struct {
-	UserID         string
-	TweetsCount    int
-	FavoritesCount int
+	UserID                 string
+	TweetsCount            int
+	IncreaseTweetsCount    int
+	FavoritesCount         int
+	IncreaseFavoritesCount int
+	Point                  int
 }

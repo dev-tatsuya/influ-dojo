@@ -33,19 +33,19 @@ func (m *MockDailyResult) EXPECT() *MockDailyResultMockRecorder {
 	return m.recorder
 }
 
-// Load mocks base method.
-func (m *MockDailyResult) Load() ([]*model.Result, error) {
+// LoadTop3 mocks base method.
+func (m *MockDailyResult) LoadTop3() ([]*model.Result, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Load")
+	ret := m.ctrl.Call(m, "LoadTop3")
 	ret0, _ := ret[0].([]*model.Result)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Load indicates an expected call of Load.
-func (mr *MockDailyResultMockRecorder) Load() *gomock.Call {
+// LoadTop3 indicates an expected call of LoadTop3.
+func (mr *MockDailyResultMockRecorder) LoadTop3() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Load", reflect.TypeOf((*MockDailyResult)(nil).Load))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadTop3", reflect.TypeOf((*MockDailyResult)(nil).LoadTop3))
 }
 
 // LoadByID mocks base method.

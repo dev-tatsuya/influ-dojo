@@ -17,17 +17,19 @@ func NewWebServer(dependency *Dependency) *echo.Echo {
 	return e
 }
 
-func setRouting(dependency *Dependency, e *echo.Echo) {
+func setRouting(d *Dependency, e *echo.Echo) {
 	e.Use(middleware.Recover(), middleware.LoggerWithConfig(middleware.LoggerConfig{}))
 
 	webAPI := e.Group("/api", myMiddleware.MakeErrorHandlerMiddleware())
 	webAPI.GET("/hello", handler.MakeHelloHandler())
-	webAPI.GET("/followers", handler.MakeFollowersHandler(dependency.FollowerClient))
-	webAPI.GET("/participant", handler.MakeParticipantHandler(dependency.UserRepo))
+	webAPI.GET("/followers", handler.MakeFollowersHandler(d.FollowerClient))
+	webAPI.GET("/participant", handler.MakeParticipantHandler(d.UserRepo))
 
 	rank := webAPI.Group("/rank", myMiddleware.MakeRankHandlerMiddleware())
-	rank.GET("/daily", handler.MakeDailyRankHandler(
-		dependency.FollowerClient, dependency.UserRepo, dependency.DailyWorkRepo, dependency.DailyResultRepo))
+	rank.GET("/daily", handler.MakeDailyRankHandler(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo))
+
+	tweet := webAPI.Group("/tweet", myMiddleware.MakeTweetHandlerMiddleware())
+	tweet.POST("/daily", handler.MakeDailyTweetHandler(d.BotClient, d.DailyWorkRepo, d.DailyResultRepo))
 }
 
 func StartWebServer(e *echo.Echo, cfg *Config) error {

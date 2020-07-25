@@ -57,23 +57,39 @@ func (dr *DailyRank) GetDailyRank() (*output.DailyRank, error) {
 			return nil, err
 		}
 
+		increaseTweetsCount := f.TweetsCount - work.TweetsCount
+		increaseFavoritesCount := f.FavoritesCount - work.FavoritesCount
+		increaseFollowersCount := f.FollowersCount - result.FollowersCount
+
+		workPoint := increaseTweetsCount*200 + increaseFavoritesCount
+		resultPoint := increaseFollowersCount
+
 		workUser := &output.WorkUser{
 			Name:                   f.Name,
 			ScreenName:             f.ScreenName,
 			ProfileImage:           f.ProfileImage,
-			IncreaseTweetsCount:    f.TweetsCount - work.TweetsCount,
-			IncreaseFavoritesCount: f.FavoritesCount - work.FavoritesCount,
+			IncreaseTweetsCount:    increaseTweetsCount,
+			IncreaseFavoritesCount: increaseFavoritesCount,
+			Point:                  workPoint,
 		}
 
 		resultUser := &output.ResultUser{
 			Name:                   f.Name,
 			ScreenName:             f.ScreenName,
 			ProfileImage:           f.ProfileImage,
-			IncreaseFollowersCount: f.FollowersCount - result.FollowersCount,
+			IncreaseFollowersCount: increaseFollowersCount,
+			Point:                  resultPoint,
 		}
 
 		workUsers = append(workUsers, workUser)
 		resultUsers = append(resultUsers, resultUser)
+
+		f.Work.IncreaseTweetsCount = increaseTweetsCount
+		f.Work.IncreaseFavoritesCount = increaseFavoritesCount
+		f.Work.Point = workPoint
+
+		f.Result.IncreaseFollowersCount = increaseFollowersCount
+		f.Result.Point = resultPoint
 
 		if err := dr.DailyWorkRepo.Save(f.Work); err != nil {
 			return nil, err
