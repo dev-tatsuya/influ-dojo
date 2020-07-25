@@ -10,9 +10,10 @@ import (
 )
 
 type Dependency struct {
-	FollowerClient domainClient.Follower
-	UserRepo       repository.User
-	DailyWorkRepo  repository.DailyWork
+	FollowerClient  domainClient.Follower
+	UserRepo        repository.User
+	DailyWorkRepo   repository.DailyWork
+	DailyResultRepo repository.DailyResult
 }
 
 func Inject(cfg *Config, db *gorm.DB) (*Dependency, error) {
@@ -23,7 +24,8 @@ func Inject(cfg *Config, db *gorm.DB) (*Dependency, error) {
 			cfg.Twitter.ConsumerKey,
 			cfg.Twitter.ConsumerSecret,
 		),
-		UserRepo:      persistence.NewUser(db),
-		DailyWorkRepo: persistence.NewDailyWork(db),
+		UserRepo:        persistence.NewUser(db),
+		DailyWorkRepo:   persistence.NewDailyWork(db),
+		DailyResultRepo: persistence.NewDailyResult(db),
 	}, nil
 }

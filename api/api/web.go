@@ -25,7 +25,8 @@ func setRouting(dependency *Dependency, e *echo.Echo) {
 	webAPI.GET("/followers", handler.MakeFollowersHandler(dependency.FollowerClient))
 
 	rank := webAPI.Group("/rank", myMiddleware.MakeRankHandlerMiddleware())
-	rank.GET("/daily", handler.MakeDailyRankHandler(dependency.FollowerClient, dependency.UserRepo, dependency.DailyWorkRepo))
+	rank.GET("/daily", handler.MakeDailyRankHandler(
+		dependency.FollowerClient, dependency.UserRepo, dependency.DailyWorkRepo, dependency.DailyResultRepo))
 }
 
 func StartWebServer(e *echo.Echo, cfg *Config) error {
