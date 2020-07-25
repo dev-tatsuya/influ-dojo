@@ -6,6 +6,7 @@ package client
 
 import (
 	gomock "github.com/golang/mock/gomock"
+	model "influ-dojo/api/domain/model"
 	reflect "reflect"
 )
 
@@ -48,10 +49,10 @@ func (mr *MockFollowerMockRecorder) CountFollowers() *gomock.Call {
 }
 
 // GetFollowers mocks base method.
-func (m *MockFollower) GetFollowers() ([]Follower, error) {
+func (m *MockFollower) GetFollowers() ([]*model.Follower, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetFollowers")
-	ret0, _ := ret[0].([]Follower)
+	ret0, _ := ret[0].([]*model.Follower)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

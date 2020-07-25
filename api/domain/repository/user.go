@@ -1,10 +1,10 @@
 //go:generate mockgen -package=$GOPACKAGE -source=$GOFILE -destination=../../mock/$GOPACKAGE/mock_$GOFILE
 
-package client
+package repository
 
 import "influ-dojo/api/domain/model"
 
-type Follower interface {
-	CountFollowers() (int, error)
-	GetFollowers() ([]*model.Follower, error)
+type User interface {
+	LoadByID(userID string) (*model.User, error)
+	Save(user *model.User) error
 }
