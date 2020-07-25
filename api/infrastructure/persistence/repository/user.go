@@ -16,8 +16,26 @@ func NewUser(db *gorm.DB) repository.User {
 }
 
 func (u *user) LoadByID(userID string) (*domainModel.User, error) {
-	mdl := &dataModel.User{}
+	mdl := new(dataModel.User)
 	if err := u.DB.Where("user_id = ?", userID).First(mdl).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, apperr.ErrRecordNotFound
+		}
+
+		return nil, err
+	}
+
+	return &domainModel.User{
+		UserID:       mdl.UserID,
+		Name:         mdl.Name,
+		ScreenName:   mdl.ScreenName,
+		ProfileImage: mdl.ProfileImage,
+	}, nil
+}
+
+func (u *user) LoadByScreenName(screenName string) (*domainModel.User, error) {
+	mdl := new(dataModel.User)
+	if err := u.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, apperr.ErrRecordNotFound
 		}

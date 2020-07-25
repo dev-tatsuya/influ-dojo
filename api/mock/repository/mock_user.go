@@ -48,6 +48,21 @@ func (mr *MockUserMockRecorder) LoadByID(userID interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadByID", reflect.TypeOf((*MockUser)(nil).LoadByID), userID)
 }
 
+// LoadByScreenName mocks base method.
+func (m *MockUser) LoadByScreenName(screenName string) (*model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LoadByScreenName", screenName)
+	ret0, _ := ret[0].(*model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LoadByScreenName indicates an expected call of LoadByScreenName.
+func (mr *MockUserMockRecorder) LoadByScreenName(screenName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadByScreenName", reflect.TypeOf((*MockUser)(nil).LoadByScreenName), screenName)
+}
+
 // Save mocks base method.
 func (m *MockUser) Save(user *model.User) error {
 	m.ctrl.T.Helper()
