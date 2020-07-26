@@ -51,8 +51,8 @@ func (b bot) Tweet(works []*model.Work, results []*model.Result) error {
 example.com
 `,
 		time.Now().Format("1/2 15:04:05"),
-		works[3].Point, works[3].UserID, works[4].Point, works[4].UserID, works[5].Point, works[5].UserID,
-		results[3].Point, results[3].UserID, results[4].Point, results[4].UserID, results[5].Point, results[5].UserID,
+		works[3].Point, works[3].ScreenName, works[4].Point, works[4].ScreenName, works[5].Point, works[5].ScreenName,
+		results[3].Point, results[3].ScreenName, results[4].Point, results[4].ScreenName, results[5].Point, results[5].ScreenName,
 	)
 	// TODO スライス3つ取得したのに、lengthが6になってるという謎
 

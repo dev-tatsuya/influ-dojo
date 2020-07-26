@@ -47,12 +47,12 @@ func (dr *DailyRank) GetDailyRank() (*output.DailyRank, error) {
 			return nil, err
 		}
 
-		work, err := dr.DailyWorkRepo.LoadByID(f.User.UserID)
+		work, err := dr.DailyWorkRepo.LoadByScreenName(f.User.ScreenName)
 		if err != nil {
 			return nil, err
 		}
 
-		result, err := dr.DailyResultRepo.LoadByID(f.User.UserID)
+		result, err := dr.DailyResultRepo.LoadByScreenName(f.User.ScreenName)
 		if err != nil {
 			return nil, err
 		}
@@ -66,7 +66,7 @@ func (dr *DailyRank) GetDailyRank() (*output.DailyRank, error) {
 
 		workUser := &output.WorkUser{
 			Name:                   f.Name,
-			ScreenName:             f.ScreenName,
+			ScreenName:             f.Work.ScreenName,
 			ProfileImage:           f.ProfileImage,
 			IncreaseTweetsCount:    increaseTweetsCount,
 			IncreaseFavoritesCount: increaseFavoritesCount,
@@ -75,7 +75,7 @@ func (dr *DailyRank) GetDailyRank() (*output.DailyRank, error) {
 
 		resultUser := &output.ResultUser{
 			Name:                   f.Name,
-			ScreenName:             f.ScreenName,
+			ScreenName:             f.Result.ScreenName,
 			ProfileImage:           f.ProfileImage,
 			IncreaseFollowersCount: increaseFollowersCount,
 			Point:                  resultPoint,

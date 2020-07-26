@@ -1,7 +1,7 @@
 package model
 
 type Work struct {
-	UserID                 string
+	ScreenName             string
 	TweetsCount            int
 	IncreaseTweetsCount    int
 	FavoritesCount         int

@@ -51,12 +51,12 @@ func (f follower) GetFollowers() ([]*model.Follower, error) {
 				ProfileImage: f.ProfileImageURL,
 			},
 			Work: &model.Work{
-				UserID:         f.IdStr,
+				ScreenName:     f.ScreenName,
 				TweetsCount:    int(f.StatusesCount),
 				FavoritesCount: f.FavouritesCount,
 			},
 			Result: &model.Result{
-				UserID:         f.IdStr,
+				ScreenName:     f.ScreenName,
 				FollowersCount: f.FollowersCount,
 			},
 		}

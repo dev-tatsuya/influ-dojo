@@ -1,7 +1,7 @@
 package model
 
 type Result struct {
-	UserID                 string
+	ScreenName             string
 	FollowersCount         int
 	IncreaseFollowersCount int
 	Point                  int

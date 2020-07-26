@@ -6,6 +6,6 @@ import "influ-dojo/api/domain/model"
 
 type DailyWork interface {
 	LoadTop3() ([]*model.Work, error)
-	LoadByID(userID string) (*model.Work, error)
+	LoadByScreenName(screenName string) (*model.Work, error)
 	Save(work *model.Work) error
 }

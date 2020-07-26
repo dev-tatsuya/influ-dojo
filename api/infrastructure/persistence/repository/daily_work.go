@@ -35,7 +35,7 @@ func (dw *dailyWork) LoadTop3() ([]*domainModel.Work, error) {
 		}
 
 		entities = append(entities, &domainModel.Work{
-			UserID:                 mdl.UserID,
+			ScreenName:             mdl.ScreenName,
 			TweetsCount:            mdl.TweetsCount,
 			IncreaseTweetsCount:    *mdl.IncreaseTweetsCount,
 			FavoritesCount:         mdl.FavoritesCount,
@@ -47,9 +47,9 @@ func (dw *dailyWork) LoadTop3() ([]*domainModel.Work, error) {
 	return entities, nil
 }
 
-func (dw *dailyWork) LoadByID(userID string) (*domainModel.Work, error) {
+func (dw *dailyWork) LoadByScreenName(screenName string) (*domainModel.Work, error) {
 	mdl := new(dataModel.DailyWork)
-	if err := dw.DB.Where("user_id = ?", userID).First(mdl).Error; err != nil {
+	if err := dw.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, errors.New("not found")
 		}
@@ -69,7 +69,7 @@ func (dw *dailyWork) LoadByID(userID string) (*domainModel.Work, error) {
 	}
 
 	return &domainModel.Work{
-		UserID:                 mdl.UserID,
+		ScreenName:             mdl.ScreenName,
 		TweetsCount:            mdl.TweetsCount,
 		IncreaseTweetsCount:    *mdl.IncreaseTweetsCount,
 		FavoritesCount:         mdl.FavoritesCount,
@@ -80,7 +80,7 @@ func (dw *dailyWork) LoadByID(userID string) (*domainModel.Work, error) {
 
 func (dw *dailyWork) Save(entity *domainModel.Work) error {
 	mdl := &dataModel.DailyWork{
-		UserID:                 entity.UserID,
+		ScreenName:             entity.ScreenName,
 		TweetsCount:            entity.TweetsCount,
 		IncreaseTweetsCount:    &entity.IncreaseTweetsCount,
 		FavoritesCount:         entity.FavoritesCount,
@@ -88,5 +88,5 @@ func (dw *dailyWork) Save(entity *domainModel.Work) error {
 		Point:                  &entity.Point,
 	}
 
-	return dw.DB.Where("user_id = ?", mdl.UserID).Assign(*mdl).FirstOrCreate(mdl).Error
+	return dw.DB.Where("screen_name = ?", mdl.ScreenName).Assign(*mdl).FirstOrCreate(mdl).Error
 }

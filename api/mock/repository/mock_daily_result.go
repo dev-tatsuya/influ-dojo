@@ -48,19 +48,19 @@ func (mr *MockDailyResultMockRecorder) LoadTop3() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadTop3", reflect.TypeOf((*MockDailyResult)(nil).LoadTop3))
 }
 
-// LoadByID mocks base method.
-func (m *MockDailyResult) LoadByID(userID string) (*model.Result, error) {
+// LoadByScreenName mocks base method.
+func (m *MockDailyResult) LoadByScreenName(screenName string) (*model.Result, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadByID", userID)
+	ret := m.ctrl.Call(m, "LoadByScreenName", screenName)
 	ret0, _ := ret[0].(*model.Result)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// LoadByID indicates an expected call of LoadByID.
-func (mr *MockDailyResultMockRecorder) LoadByID(userID interface{}) *gomock.Call {
+// LoadByScreenName indicates an expected call of LoadByScreenName.
+func (mr *MockDailyResultMockRecorder) LoadByScreenName(screenName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadByID", reflect.TypeOf((*MockDailyResult)(nil).LoadByID), userID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadByScreenName", reflect.TypeOf((*MockDailyResult)(nil).LoadByScreenName), screenName)
 }
 
 // Save mocks base method.

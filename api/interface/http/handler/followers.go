@@ -14,6 +14,7 @@ func MakeFollowersHandler(follower client.Follower) echo.HandlerFunc {
 		if err != nil {
 			return err
 		}
+
 		return c.String(http.StatusOK, fmt.Sprintf("number of followers: %d\n", count))
 	}
 }
