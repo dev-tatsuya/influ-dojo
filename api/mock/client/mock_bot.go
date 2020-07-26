@@ -46,3 +46,17 @@ func (mr *MockBotMockRecorder) Tweet(work, result interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Tweet", reflect.TypeOf((*MockBot)(nil).Tweet), work, result)
 }
+
+// Favorite mocks base method.
+func (m *MockBot) Favorite() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Favorite")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Favorite indicates an expected call of Favorite.
+func (mr *MockBotMockRecorder) Favorite() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Favorite", reflect.TypeOf((*MockBot)(nil).Favorite))
+}

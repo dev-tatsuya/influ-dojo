@@ -6,4 +6,5 @@ import "influ-dojo/api/domain/model"
 
 type Bot interface {
 	Tweet(work []*model.Work, result []*model.Result) error
+	Favorite() error
 }

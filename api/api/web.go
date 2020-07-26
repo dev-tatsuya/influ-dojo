@@ -24,6 +24,7 @@ func setRouting(d *Dependency, e *echo.Echo) {
 	webAPI.GET("/hello", handler.MakeHelloHandler())
 	webAPI.GET("/followers", handler.MakeFollowersHandler(d.FollowerClient))
 	webAPI.GET("/participant", handler.MakeParticipantHandler(d.UserRepo))
+	webAPI.POST("/favorite", handler.MakeFavoriteHandler(d.BotClient))
 
 	rank := webAPI.Group("/rank", myMiddleware.MakeRankHandlerMiddleware())
 	rank.GET("/daily", handler.MakeDailyRankHandler(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo))
