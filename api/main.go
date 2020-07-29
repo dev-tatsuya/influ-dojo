@@ -48,6 +48,10 @@ func main() {
 		&dataModel.User{},
 		&dataModel.DailyWork{},
 		&dataModel.DailyResult{},
+		&dataModel.WeeklyWork{},
+		&dataModel.WeeklyResult{},
+		&dataModel.MonthlyWork{},
+		&dataModel.MonthlyResult{},
 	)
 
 	dependency, err := api.Inject(cfg, db)
