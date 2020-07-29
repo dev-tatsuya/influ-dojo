@@ -19,6 +19,7 @@ func NewWebServer(dependency *Dependency) *echo.Echo {
 
 func setRouting(d *Dependency, e *echo.Echo) {
 	e.Use(middleware.Recover(), middleware.LoggerWithConfig(middleware.LoggerConfig{}))
+	e.Use(middleware.CORS())
 
 	webAPI := e.Group("/api", myMiddleware.MakeErrorHandlerMiddleware())
 	webAPI.GET("/hello", handler.MakeHelloHandler())
