@@ -4,7 +4,7 @@ import (
 	"influ-dojo/api/domain/apperr"
 	domainClient "influ-dojo/api/domain/client"
 	"influ-dojo/api/domain/repository"
-	"influ-dojo/api/usecase/output"
+	"influ-dojo/api/domain/utils"
 )
 
 type DailyRank struct {
@@ -14,94 +14,75 @@ type DailyRank struct {
 	DailyResultRepo repository.DailyResult `json:"-"`
 }
 
-func (rank *DailyRank) PostDailyRank() (*output.DailyRank, error) {
+func (rank *DailyRank) PostDailyRank() error {
 	followers, err := rank.FollowerClient.GetFollowers()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	workUsers := make([]*output.WorkUser, 0)
-	resultUsers := make([]*output.ResultUser, 0)
 	for _, f := range followers {
 		if f == nil {
 			continue
 		}
 
-		if _, err := rank.UserRepo.LoadByID(f.User.UserID); err != nil {
+		user, err := rank.UserRepo.LoadByID(f.User.UserID)
+		if err != nil {
 			if err == apperr.ErrRecordNotFound {
 				if err := rank.UserRepo.Save(f.User); err != nil {
-					return nil, err
+					return err
 				}
 
 				if err := rank.DailyWorkRepo.Save(f.Work); err != nil {
-					return nil, err
+					return err
 				}
 
 				if err := rank.DailyResultRepo.Save(f.Result); err != nil {
-					return nil, err
+					return err
 				}
 
 				continue
 			}
 
-			return nil, err
+			return err
 		}
 
-		work, err := rank.DailyWorkRepo.LoadByScreenName(f.User.ScreenName)
+		work, err := rank.DailyWorkRepo.LoadByScreenName(user.ScreenName)
 		if err != nil {
-			return nil, err
+			if err == apperr.ErrRecordNotFound {
+				if err := rank.DailyWorkRepo.Save(f.Work); err != nil {
+					return err
+				}
+
+				if err := rank.DailyResultRepo.Save(f.Result); err != nil {
+					return err
+				}
+
+				continue
+			}
+
+			return err
 		}
 
-		result, err := rank.DailyResultRepo.LoadByScreenName(f.User.ScreenName)
+		result, err := rank.DailyResultRepo.LoadByScreenName(user.ScreenName)
 		if err != nil {
-			return nil, err
+			return err
 		}
 
-		increaseTweetsCount := f.TweetsCount - work.TweetsCount
-		increaseFavoritesCount := f.FavoritesCount - work.FavoritesCount
-		increaseFollowersCount := f.FollowersCount - result.FollowersCount
+		f.Work.IncreaseTweetsCount = utils.Sub(f.TweetsCount, work.TweetsCount)
+		f.Work.IncreaseFavoritesCount = utils.Sub(f.FavoritesCount, work.FavoritesCount)
+		f.Work.SetPoint()
 
-		workPoint := increaseTweetsCount*200 + increaseFavoritesCount
-		resultPoint := increaseFollowersCount
-
-		workUser := &output.WorkUser{
-			Name:                   f.Name,
-			ScreenName:             f.Work.ScreenName,
-			ProfileImage:           f.ProfileImage,
-			IncreaseTweetsCount:    increaseTweetsCount,
-			IncreaseFavoritesCount: increaseFavoritesCount,
-			Point:                  workPoint,
-		}
-
-		resultUser := &output.ResultUser{
-			Name:                   f.Name,
-			ScreenName:             f.Result.ScreenName,
-			ProfileImage:           f.ProfileImage,
-			IncreaseFollowersCount: increaseFollowersCount,
-			Point:                  resultPoint,
-		}
-
-		workUsers = append(workUsers, workUser)
-		resultUsers = append(resultUsers, resultUser)
-
-		f.Work.IncreaseTweetsCount = increaseTweetsCount
-		f.Work.IncreaseFavoritesCount = increaseFavoritesCount
-		f.Work.Point = workPoint
-
-		f.Result.IncreaseFollowersCount = increaseFollowersCount
-		f.Result.Point = resultPoint
+		f.Result.IncreaseFollowersCount = utils.Sub(f.FollowersCount, result.FollowersCount)
+		f.Result.SetPoint()
 
 		if err := rank.DailyWorkRepo.Save(f.Work); err != nil {
-			return nil, err
+			return err
 		}
 
 		if err := rank.DailyResultRepo.Save(f.Result); err != nil {
-			return nil, err
+			return err
 		}
 	}
 
-	return &output.DailyRank{
-		WorkRank:   &output.WorkRank{WorkUsers: workUsers},
-		ResultRank: &output.ResultRank{ResultUsers: resultUsers},
-	}, nil
+	return nil
 }

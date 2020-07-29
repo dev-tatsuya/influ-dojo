@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"errors"
+	"influ-dojo/api/domain/apperr"
 	domainModel "influ-dojo/api/domain/model"
 	"influ-dojo/api/domain/repository"
 	dataModel "influ-dojo/api/infrastructure/persistence/model"
@@ -51,7 +51,7 @@ func (work *dailyWork) LoadByScreenName(screenName string) (*domainModel.Work, e
 	mdl := new(dataModel.DailyWork)
 	if err := work.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
-			return nil, errors.New("not found")
+			return nil, apperr.ErrRecordNotFound
 		}
 
 		return nil, err

@@ -6,3 +6,7 @@ type Result struct {
 	IncreaseFollowersCount int
 	Point                  int
 }
+
+func (res *Result) SetPoint() {
+	res.Point = res.IncreaseFollowersCount
+}

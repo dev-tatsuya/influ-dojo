@@ -23,11 +23,10 @@ func MakeDailyRankHandler(
 			DailyResultRepo: result,
 		}
 
-		out, err := in.PostDailyRank()
-		if err != nil {
+		if err := in.PostDailyRank(); err != nil {
 			return err
 		}
 
-		return c.JSON(http.StatusOK, out)
+		return c.NoContent(http.StatusOK)
 	}
 }
