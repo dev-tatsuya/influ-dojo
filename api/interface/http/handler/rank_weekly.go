@@ -23,7 +23,7 @@ func MakeWeeklyRankHandler(
 			WeeklyResultRepo: result,
 		}
 
-		out, err := in.GetWeeklyRank()
+		out, err := in.PostWeeklyRank()
 		if err != nil {
 			return err
 		}

@@ -15,9 +15,9 @@ func NewMonthlyWork(db *gorm.DB) repository.MonthlyWork {
 	return &monthlyWork{db}
 }
 
-func (dw *monthlyWork) LoadTop3() ([]*domainModel.Work, error) {
+func (work *monthlyWork) LoadTop3() ([]*domainModel.Work, error) {
 	mdls := make([]*dataModel.MonthlyWork, 0)
-	if err := dw.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
+	if err := work.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
 		return nil, err
 	}
 
@@ -47,9 +47,9 @@ func (dw *monthlyWork) LoadTop3() ([]*domainModel.Work, error) {
 	return entities, nil
 }
 
-func (dw *monthlyWork) LoadByScreenName(screenName string) (*domainModel.Work, error) {
+func (work *monthlyWork) LoadByScreenName(screenName string) (*domainModel.Work, error) {
 	mdl := new(dataModel.MonthlyWork)
-	if err := dw.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
+	if err := work.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, errors.New("not found")
 		}
@@ -78,7 +78,7 @@ func (dw *monthlyWork) LoadByScreenName(screenName string) (*domainModel.Work, e
 	}, nil
 }
 
-func (dw *monthlyWork) Save(entity *domainModel.Work) error {
+func (work *monthlyWork) Save(entity *domainModel.Work) error {
 	mdl := &dataModel.MonthlyWork{
 		ScreenName:             entity.ScreenName,
 		TweetsCount:            entity.TweetsCount,
@@ -88,5 +88,5 @@ func (dw *monthlyWork) Save(entity *domainModel.Work) error {
 		Point:                  &entity.Point,
 	}
 
-	return dw.DB.Where("screen_name = ?", mdl.ScreenName).Assign(*mdl).FirstOrCreate(mdl).Error
+	return work.DB.Where("screen_name = ?", mdl.ScreenName).Assign(*mdl).FirstOrCreate(mdl).Error
 }

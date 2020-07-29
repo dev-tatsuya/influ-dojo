@@ -23,7 +23,7 @@ func MakeMonthlyRankHandler(
 			MonthlyResultRepo: result,
 		}
 
-		out, err := in.GetMonthlyRank()
+		out, err := in.PostMonthlyRank()
 		if err != nil {
 			return err
 		}

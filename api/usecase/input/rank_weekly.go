@@ -14,8 +14,8 @@ type WeeklyRank struct {
 	WeeklyResultRepo repository.WeeklyResult `json:"-"`
 }
 
-func (dr *WeeklyRank) GetWeeklyRank() (*output.DailyRank, error) {
-	followers, err := dr.FollowerClient.GetFollowers()
+func (rank *WeeklyRank) PostWeeklyRank() (*output.DailyRank, error) {
+	followers, err := rank.FollowerClient.GetFollowers()
 	if err != nil {
 		return nil, err
 	}
@@ -27,17 +27,17 @@ func (dr *WeeklyRank) GetWeeklyRank() (*output.DailyRank, error) {
 			continue
 		}
 
-		if _, err := dr.UserRepo.LoadByID(f.User.UserID); err != nil {
+		if _, err := rank.UserRepo.LoadByID(f.User.UserID); err != nil {
 			if err == apperr.ErrRecordNotFound {
-				if err := dr.UserRepo.Save(f.User); err != nil {
+				if err := rank.UserRepo.Save(f.User); err != nil {
 					return nil, err
 				}
 
-				if err := dr.WeeklyWorkRepo.Save(f.Work); err != nil {
+				if err := rank.WeeklyWorkRepo.Save(f.Work); err != nil {
 					return nil, err
 				}
 
-				if err := dr.WeeklyResultRepo.Save(f.Result); err != nil {
+				if err := rank.WeeklyResultRepo.Save(f.Result); err != nil {
 					return nil, err
 				}
 
@@ -47,12 +47,12 @@ func (dr *WeeklyRank) GetWeeklyRank() (*output.DailyRank, error) {
 			return nil, err
 		}
 
-		work, err := dr.WeeklyWorkRepo.LoadByScreenName(f.User.ScreenName)
+		work, err := rank.WeeklyWorkRepo.LoadByScreenName(f.User.ScreenName)
 		if err != nil {
 			return nil, err
 		}
 
-		result, err := dr.WeeklyResultRepo.LoadByScreenName(f.User.ScreenName)
+		result, err := rank.WeeklyResultRepo.LoadByScreenName(f.User.ScreenName)
 		if err != nil {
 			return nil, err
 		}
@@ -91,11 +91,11 @@ func (dr *WeeklyRank) GetWeeklyRank() (*output.DailyRank, error) {
 		f.Result.IncreaseFollowersCount = increaseFollowersCount
 		f.Result.Point = resultPoint
 
-		if err := dr.WeeklyWorkRepo.Save(f.Work); err != nil {
+		if err := rank.WeeklyWorkRepo.Save(f.Work); err != nil {
 			return nil, err
 		}
 
-		if err := dr.WeeklyResultRepo.Save(f.Result); err != nil {
+		if err := rank.WeeklyResultRepo.Save(f.Result); err != nil {
 			return nil, err
 		}
 	}

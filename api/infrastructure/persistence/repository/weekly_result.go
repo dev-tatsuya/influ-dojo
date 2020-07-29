@@ -15,9 +15,9 @@ func NewWeeklyResult(db *gorm.DB) repository.WeeklyResult {
 	return &weeklyResult{db}
 }
 
-func (dw *weeklyResult) LoadTop3() ([]*domainModel.Result, error) {
+func (result *weeklyResult) LoadTop3() ([]*domainModel.Result, error) {
 	mdls := make([]*dataModel.WeeklyResult, 0)
-	if err := dw.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
+	if err := result.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
 		return nil, err
 	}
 
@@ -42,9 +42,9 @@ func (dw *weeklyResult) LoadTop3() ([]*domainModel.Result, error) {
 	return entities, nil
 }
 
-func (dw *weeklyResult) LoadByScreenName(screenName string) (*domainModel.Result, error) {
+func (result *weeklyResult) LoadByScreenName(screenName string) (*domainModel.Result, error) {
 	mdl := new(dataModel.WeeklyResult)
-	if err := dw.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
+	if err := result.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, errors.New("not found")
 		}
@@ -68,7 +68,7 @@ func (dw *weeklyResult) LoadByScreenName(screenName string) (*domainModel.Result
 	}, nil
 }
 
-func (dw *weeklyResult) Save(entity *domainModel.Result) error {
+func (result *weeklyResult) Save(entity *domainModel.Result) error {
 	mdl := &dataModel.WeeklyResult{
 		ScreenName:             entity.ScreenName,
 		FollowersCount:         entity.FollowersCount,
@@ -76,5 +76,5 @@ func (dw *weeklyResult) Save(entity *domainModel.Result) error {
 		Point:                  &entity.Point,
 	}
 
-	return dw.DB.Where("screen_name = ?", mdl.ScreenName).Assign(*mdl).FirstOrCreate(mdl).Error
+	return result.DB.Where("screen_name = ?", mdl.ScreenName).Assign(*mdl).FirstOrCreate(mdl).Error
 }

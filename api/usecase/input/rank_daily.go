@@ -14,8 +14,8 @@ type DailyRank struct {
 	DailyResultRepo repository.DailyResult `json:"-"`
 }
 
-func (dr *DailyRank) GetDailyRank() (*output.DailyRank, error) {
-	followers, err := dr.FollowerClient.GetFollowers()
+func (rank *DailyRank) PostDailyRank() (*output.DailyRank, error) {
+	followers, err := rank.FollowerClient.GetFollowers()
 	if err != nil {
 		return nil, err
 	}
@@ -27,17 +27,17 @@ func (dr *DailyRank) GetDailyRank() (*output.DailyRank, error) {
 			continue
 		}
 
-		if _, err := dr.UserRepo.LoadByID(f.User.UserID); err != nil {
+		if _, err := rank.UserRepo.LoadByID(f.User.UserID); err != nil {
 			if err == apperr.ErrRecordNotFound {
-				if err := dr.UserRepo.Save(f.User); err != nil {
+				if err := rank.UserRepo.Save(f.User); err != nil {
 					return nil, err
 				}
 
-				if err := dr.DailyWorkRepo.Save(f.Work); err != nil {
+				if err := rank.DailyWorkRepo.Save(f.Work); err != nil {
 					return nil, err
 				}
 
-				if err := dr.DailyResultRepo.Save(f.Result); err != nil {
+				if err := rank.DailyResultRepo.Save(f.Result); err != nil {
 					return nil, err
 				}
 
@@ -47,12 +47,12 @@ func (dr *DailyRank) GetDailyRank() (*output.DailyRank, error) {
 			return nil, err
 		}
 
-		work, err := dr.DailyWorkRepo.LoadByScreenName(f.User.ScreenName)
+		work, err := rank.DailyWorkRepo.LoadByScreenName(f.User.ScreenName)
 		if err != nil {
 			return nil, err
 		}
 
-		result, err := dr.DailyResultRepo.LoadByScreenName(f.User.ScreenName)
+		result, err := rank.DailyResultRepo.LoadByScreenName(f.User.ScreenName)
 		if err != nil {
 			return nil, err
 		}
@@ -91,11 +91,11 @@ func (dr *DailyRank) GetDailyRank() (*output.DailyRank, error) {
 		f.Result.IncreaseFollowersCount = increaseFollowersCount
 		f.Result.Point = resultPoint
 
-		if err := dr.DailyWorkRepo.Save(f.Work); err != nil {
+		if err := rank.DailyWorkRepo.Save(f.Work); err != nil {
 			return nil, err
 		}
 
-		if err := dr.DailyResultRepo.Save(f.Result); err != nil {
+		if err := rank.DailyResultRepo.Save(f.Result); err != nil {
 			return nil, err
 		}
 	}

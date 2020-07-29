@@ -23,7 +23,7 @@ func MakeDailyRankHandler(
 			DailyResultRepo: result,
 		}
 
-		out, err := in.GetDailyRank()
+		out, err := in.PostDailyRank()
 		if err != nil {
 			return err
 		}
