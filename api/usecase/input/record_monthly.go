@@ -7,15 +7,15 @@ import (
 	"influ-dojo/api/domain/utils"
 )
 
-type MonthlyRank struct {
+type MonthlyRecord struct {
 	FollowerClient    domainClient.Follower `json:"-"`
 	UserRepo          repository.User       `json:"-"`
 	MonthlyWorkRepo   repository.Work       `json:"-"`
 	MonthlyResultRepo repository.Result     `json:"-"`
 }
 
-func (rank *MonthlyRank) PostMonthlyRank() error {
-	followers, err := rank.FollowerClient.GetFollowers()
+func (in *MonthlyRecord) RecordMonthly() error {
+	followers, err := in.FollowerClient.GetFollowers()
 	if err != nil {
 		return err
 	}
@@ -25,18 +25,18 @@ func (rank *MonthlyRank) PostMonthlyRank() error {
 			continue
 		}
 
-		user, err := rank.UserRepo.LoadByID(f.User.UserID)
+		user, err := in.UserRepo.LoadByID(f.User.UserID)
 		if err != nil {
 			if err == apperr.ErrRecordNotFound {
-				if err := rank.UserRepo.Save(f.User); err != nil {
+				if err := in.UserRepo.Save(f.User); err != nil {
 					return err
 				}
 
-				if err := rank.MonthlyWorkRepo.Save(f.Work); err != nil {
+				if err := in.MonthlyWorkRepo.Save(f.Work); err != nil {
 					return err
 				}
 
-				if err := rank.MonthlyResultRepo.Save(f.Result); err != nil {
+				if err := in.MonthlyResultRepo.Save(f.Result); err != nil {
 					return err
 				}
 
@@ -46,14 +46,14 @@ func (rank *MonthlyRank) PostMonthlyRank() error {
 			return err
 		}
 
-		work, err := rank.MonthlyWorkRepo.LoadByScreenName(user.ScreenName)
+		work, err := in.MonthlyWorkRepo.LoadByScreenName(user.ScreenName)
 		if err != nil {
 			if err == apperr.ErrRecordNotFound {
-				if err := rank.MonthlyWorkRepo.Save(f.Work); err != nil {
+				if err := in.MonthlyWorkRepo.Save(f.Work); err != nil {
 					return err
 				}
 
-				if err := rank.MonthlyResultRepo.Save(f.Result); err != nil {
+				if err := in.MonthlyResultRepo.Save(f.Result); err != nil {
 					return err
 				}
 
@@ -63,7 +63,7 @@ func (rank *MonthlyRank) PostMonthlyRank() error {
 			return err
 		}
 
-		result, err := rank.MonthlyResultRepo.LoadByScreenName(user.ScreenName)
+		result, err := in.MonthlyResultRepo.LoadByScreenName(user.ScreenName)
 		if err != nil {
 			return err
 		}
@@ -75,11 +75,11 @@ func (rank *MonthlyRank) PostMonthlyRank() error {
 		f.Result.IncreaseFollowersCount = utils.Sub(f.FollowersCount, result.FollowersCount)
 		f.Result.SetPoint()
 
-		if err := rank.MonthlyWorkRepo.Save(f.Work); err != nil {
+		if err := in.MonthlyWorkRepo.Save(f.Work); err != nil {
 			return err
 		}
 
-		if err := rank.MonthlyResultRepo.Save(f.Result); err != nil {
+		if err := in.MonthlyResultRepo.Save(f.Result); err != nil {
 			return err
 		}
 	}

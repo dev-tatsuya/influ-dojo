@@ -9,21 +9,21 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func MakeDailyRankHandler(
+func MakeRecordWeeklyHandler(
 	follower client.Follower,
 	user repository.User,
 	work repository.Work,
 	result repository.Result,
 ) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		in := input.DailyRank{
-			FollowerClient:  follower,
-			UserRepo:        user,
-			DailyWorkRepo:   work,
-			DailyResultRepo: result,
+		in := input.WeeklyRecord{
+			FollowerClient:   follower,
+			UserRepo:         user,
+			WeeklyWorkRepo:   work,
+			WeeklyResultRepo: result,
 		}
 
-		if err := in.PostDailyRank(); err != nil {
+		if err := in.RecordWeekly(); err != nil {
 			return err
 		}
 

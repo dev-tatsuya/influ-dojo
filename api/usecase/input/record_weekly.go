@@ -8,15 +8,15 @@ import (
 	"log"
 )
 
-type WeeklyRank struct {
+type WeeklyRecord struct {
 	FollowerClient   domainClient.Follower `json:"-"`
 	UserRepo         repository.User       `json:"-"`
 	WeeklyWorkRepo   repository.Work       `json:"-"`
 	WeeklyResultRepo repository.Result     `json:"-"`
 }
 
-func (rank *WeeklyRank) PostWeeklyRank() error {
-	followers, err := rank.FollowerClient.GetFollowers()
+func (in *WeeklyRecord) RecordWeekly() error {
+	followers, err := in.FollowerClient.GetFollowers()
 	if err != nil {
 		return err
 	}
@@ -26,18 +26,18 @@ func (rank *WeeklyRank) PostWeeklyRank() error {
 			continue
 		}
 
-		user, err := rank.UserRepo.LoadByID(f.User.UserID)
+		user, err := in.UserRepo.LoadByID(f.User.UserID)
 		if err != nil {
 			if err == apperr.ErrRecordNotFound {
-				if err := rank.UserRepo.Save(f.User); err != nil {
+				if err := in.UserRepo.Save(f.User); err != nil {
 					return err
 				}
 
-				if err := rank.WeeklyWorkRepo.Save(f.Work); err != nil {
+				if err := in.WeeklyWorkRepo.Save(f.Work); err != nil {
 					return err
 				}
 
-				if err := rank.WeeklyResultRepo.Save(f.Result); err != nil {
+				if err := in.WeeklyResultRepo.Save(f.Result); err != nil {
 					return err
 				}
 
@@ -47,15 +47,15 @@ func (rank *WeeklyRank) PostWeeklyRank() error {
 			return err
 		}
 
-		work, err := rank.WeeklyWorkRepo.LoadByScreenName(user.ScreenName)
+		work, err := in.WeeklyWorkRepo.LoadByScreenName(user.ScreenName)
 		if err != nil {
 			log.Printf("why: %+v", err)
 			if err == apperr.ErrRecordNotFound {
-				if err := rank.WeeklyWorkRepo.Save(f.Work); err != nil {
+				if err := in.WeeklyWorkRepo.Save(f.Work); err != nil {
 					return err
 				}
 
-				if err := rank.WeeklyResultRepo.Save(f.Result); err != nil {
+				if err := in.WeeklyResultRepo.Save(f.Result); err != nil {
 					return err
 				}
 
@@ -65,7 +65,7 @@ func (rank *WeeklyRank) PostWeeklyRank() error {
 			return err
 		}
 
-		result, err := rank.WeeklyResultRepo.LoadByScreenName(user.ScreenName)
+		result, err := in.WeeklyResultRepo.LoadByScreenName(user.ScreenName)
 		if err != nil {
 			return err
 		}
@@ -77,11 +77,11 @@ func (rank *WeeklyRank) PostWeeklyRank() error {
 		f.Result.IncreaseFollowersCount = utils.Sub(f.FollowersCount, result.FollowersCount)
 		f.Result.SetPoint()
 
-		if err := rank.WeeklyWorkRepo.Save(f.Work); err != nil {
+		if err := in.WeeklyWorkRepo.Save(f.Work); err != nil {
 			return err
 		}
 
-		if err := rank.WeeklyResultRepo.Save(f.Result); err != nil {
+		if err := in.WeeklyResultRepo.Save(f.Result); err != nil {
 			return err
 		}
 	}
