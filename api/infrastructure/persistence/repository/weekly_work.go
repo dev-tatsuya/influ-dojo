@@ -17,6 +17,10 @@ func NewWeeklyWork(db *gorm.DB) repository.Work {
 	return &weeklyWork{gormRepository{db}}
 }
 
+func (repo *weeklyWork) LoadOrderByRanking() ([]*domainModel.Work, error) {
+	panic("implement me")
+}
+
 func (repo *weeklyWork) LoadTop3() ([]*domainModel.Work, error) {
 	mdls := make([]*dataModel.WeeklyWork, 0)
 	if err := repo.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
@@ -24,7 +28,7 @@ func (repo *weeklyWork) LoadTop3() ([]*domainModel.Work, error) {
 	}
 
 	count := 0
-	entities := make([]*domainModel.Work, len(mdls))
+	entities := make([]*domainModel.Work, 0)
 	for _, mdl := range mdls {
 		if mdl.IncreaseTweetsCount == nil {
 			mdl.IncreaseTweetsCount = &count

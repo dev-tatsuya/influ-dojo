@@ -28,10 +28,13 @@ func setRouting(d *Dependency, e *echo.Echo) {
 	webAPI.POST("/favorite", handler.MakeFavoriteHandler(d.BotClient))
 	webAPI.GET("/ranking", handler.MakeHelloHandler())
 
-	rank := webAPI.Group("/record")
-	rank.POST("/daily", handler.MakeRecordDailyHandler(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo))
-	rank.POST("/weekly", handler.MakeRecordWeeklyHandler(d.FollowerClient, d.UserRepo, d.WeeklyWorkRepo, d.WeeklyResultRepo))
-	rank.POST("/monthly", handler.MakeRecordMonthlyHandler(d.FollowerClient, d.UserRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo))
+	ranking := webAPI.Group("/ranking")
+	ranking.POST("/daily", handler.MakeRankDailyHandler(d.DailyWorkRepo, d.DailyResultRepo))
+
+	record := webAPI.Group("/record")
+	record.POST("/daily", handler.MakeRecordDailyHandler(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo))
+	record.POST("/weekly", handler.MakeRecordWeeklyHandler(d.FollowerClient, d.UserRepo, d.WeeklyWorkRepo, d.WeeklyResultRepo))
+	record.POST("/monthly", handler.MakeRecordMonthlyHandler(d.FollowerClient, d.UserRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo))
 
 	tweet := webAPI.Group("/tweet")
 	tweet.POST("/daily", handler.MakeDailyTweetHandler(d.BotClient, d.DailyWorkRepo, d.DailyResultRepo))

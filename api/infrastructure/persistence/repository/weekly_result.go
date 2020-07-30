@@ -17,13 +17,17 @@ func NewWeeklyResult(db *gorm.DB) repository.Result {
 	return &weeklyResult{gormRepository{db}}
 }
 
+func (repo *weeklyResult) LoadOrderByRanking() ([]*domainModel.Result, error) {
+	panic("implement me")
+}
+
 func (repo *weeklyResult) LoadTop3() ([]*domainModel.Result, error) {
 	mdls := make([]*dataModel.WeeklyResult, 0)
 	if err := repo.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
 		return nil, err
 	}
 
-	entities := make([]*domainModel.Result, len(mdls))
+	entities := make([]*domainModel.Result, 0)
 	for _, mdl := range mdls {
 		count := 0
 		if mdl.IncreaseFollowersCount == nil {

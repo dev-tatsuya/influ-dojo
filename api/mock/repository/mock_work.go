@@ -33,6 +33,21 @@ func (m *MockWork) EXPECT() *MockWorkMockRecorder {
 	return m.recorder
 }
 
+// LoadOrderByRanking mocks base method.
+func (m *MockWork) LoadOrderByRanking() ([]*model.Work, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LoadOrderByRanking")
+	ret0, _ := ret[0].([]*model.Work)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LoadOrderByRanking indicates an expected call of LoadOrderByRanking.
+func (mr *MockWorkMockRecorder) LoadOrderByRanking() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadOrderByRanking", reflect.TypeOf((*MockWork)(nil).LoadOrderByRanking))
+}
+
 // LoadTop3 mocks base method.
 func (m *MockWork) LoadTop3() ([]*model.Work, error) {
 	m.ctrl.T.Helper()
