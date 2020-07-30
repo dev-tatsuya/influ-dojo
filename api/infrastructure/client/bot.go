@@ -23,22 +23,6 @@ func NewBot(accessToken, accessTokenSecret, consumerKey, consumerSecret string) 
 }
 
 func (b *bot) Tweet(works []*model.Work, results []*model.Result) error {
-	fmt.Println("===== work ranking =====", len(works))
-	for _, work := range works {
-		if work == nil {
-			continue
-		}
-		fmt.Println(*work)
-	}
-
-	fmt.Println("===== result ranking =====", len(results))
-	for _, result := range results {
-		if result == nil {
-			continue
-		}
-		fmt.Println(*result)
-	}
-
 	body := fmt.Sprintf(`
 【デイリー速報 %v】
 
@@ -55,11 +39,10 @@ func (b *bot) Tweet(works []*model.Work, results []*model.Result) error {
 ▼ 4位以下はコチラ ▼
 example.com
 `,
-		time.Now().Format("1/2 15:04:05"),
-		works[3].Point, works[3].ScreenName, works[4].Point, works[4].ScreenName, works[5].Point, works[5].ScreenName,
-		results[3].Point, results[3].ScreenName, results[4].Point, results[4].ScreenName, results[5].Point, results[5].ScreenName,
+		time.Now().Format("1/2 15:04"),
+		works[0].Point, works[0].ScreenName, works[1].Point, works[1].ScreenName, works[2].Point, works[2].ScreenName,
+		results[0].Point, results[0].ScreenName, results[1].Point, results[1].ScreenName, results[2].Point, results[2].ScreenName,
 	)
-	// TODO スライス3つ取得したのに、lengthが6になってるという謎
 
 	if _, err := b.api.PostTweet(body, nil); err != nil {
 		return err
