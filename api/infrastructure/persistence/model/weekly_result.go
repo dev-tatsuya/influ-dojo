@@ -1,8 +1,7 @@
 package model
 
 type WeeklyResult struct {
-	ID                     int `gorm:"primary_key;auto_increment"`
-	ScreenName             string
+	ScreenName             string `gorm:"primary_key"`
 	FollowersCount         int
 	IncreaseFollowersCount *int
 	Point                  *int
@@ -10,7 +9,7 @@ type WeeklyResult struct {
 }
 
 func (mdl *WeeklyResult) IsNew() bool {
-	return mdl.ID == 0
+	return len(mdl.ScreenName) == 0
 }
 
 func (mdl *WeeklyResult) AttachID() error {

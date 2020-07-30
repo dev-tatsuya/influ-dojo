@@ -1,8 +1,7 @@
 package model
 
 type MonthlyWork struct {
-	ID                     int `gorm:"primary_key;auto_increment"`
-	ScreenName             string
+	ScreenName             string `gorm:"primary_key"`
 	TweetsCount            int
 	IncreaseTweetsCount    *int
 	FavoritesCount         int
@@ -12,7 +11,7 @@ type MonthlyWork struct {
 }
 
 func (mdl *MonthlyWork) IsNew() bool {
-	return mdl.ID == 0
+	return len(mdl.ScreenName) == 0
 }
 
 func (mdl *MonthlyWork) AttachID() error {

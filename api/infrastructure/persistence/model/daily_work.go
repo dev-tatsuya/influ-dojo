@@ -3,8 +3,7 @@ package model
 import "influ-dojo/api/domain/model"
 
 type DailyWork struct {
-	ID                     int `gorm:"primary_key;auto_increment"`
-	ScreenName             string
+	ScreenName             string `gorm:"primary_key"`
 	TweetsCount            int
 	IncreaseTweetsCount    *int
 	FavoritesCount         int
@@ -16,7 +15,7 @@ type DailyWork struct {
 }
 
 func (mdl *DailyWork) IsNew() bool {
-	return mdl.ID == 0
+	return len(mdl.ScreenName) == 0
 }
 
 func (mdl *DailyWork) AttachID() error {
