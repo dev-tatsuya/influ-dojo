@@ -33,7 +33,7 @@ func connectMySQL(user, password, host, database string, port int, isDebug bool)
 
 	db.DB().SetMaxIdleConns(mySQLMaxIdleConnections)
 	db.DB().SetMaxOpenConns(mySQLMaxOpenConnections)
-	db.LogMode(isDebug)
+	//db.LogMode(isDebug)
 
 	return db, nil
 }

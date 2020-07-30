@@ -65,6 +65,8 @@ func (repo *dailyResult) Save(entity *domainModel.Result) error {
 		FollowersCount:         entity.FollowersCount,
 		IncreaseFollowersCount: &entity.IncreaseFollowersCount,
 		Point:                  &entity.Point,
+		Ranking:                entity.Ranking,
+		LastRanking:            entity.LastRanking,
 	}
 
 	return repo.store(repo.DB, mdl)

@@ -67,6 +67,8 @@ func (repo *dailyWork) Save(entity *domainModel.Work) error {
 		FavoritesCount:         entity.FavoritesCount,
 		IncreaseFavoritesCount: &entity.IncreaseFavoritesCount,
 		Point:                  &entity.Point,
+		Ranking:                entity.Ranking,
+		LastRanking:            entity.LastRanking,
 	}
 
 	return repo.store(repo.DB, mdl)
