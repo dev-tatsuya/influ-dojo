@@ -11,8 +11,8 @@ import (
 
 func MakeDailyTweetHandler(
 	bot client.Bot,
-	work repository.DailyWork,
-	result repository.DailyResult,
+	work repository.Work,
+	result repository.Result,
 ) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		in := input.DailyTweet{

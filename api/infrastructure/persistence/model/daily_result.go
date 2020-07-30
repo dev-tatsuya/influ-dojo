@@ -8,3 +8,11 @@ type DailyResult struct {
 	Point                  *int
 	Model
 }
+
+func (mdl *DailyResult) IsNew() bool {
+	return mdl.ID == 0
+}
+
+func (mdl *DailyResult) AttachID() error {
+	return nil
+}

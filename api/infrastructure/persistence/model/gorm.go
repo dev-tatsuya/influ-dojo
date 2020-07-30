@@ -7,3 +7,8 @@ type Model struct {
 	UpdatedAt time.Time
 	DeletedAt *time.Time
 }
+
+type GormModel interface {
+	IsNew() bool
+	AttachID() error
+}

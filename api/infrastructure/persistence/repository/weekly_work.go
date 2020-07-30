@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"errors"
+	"influ-dojo/api/domain/apperr"
 	domainModel "influ-dojo/api/domain/model"
 	"influ-dojo/api/domain/repository"
 	dataModel "influ-dojo/api/infrastructure/persistence/model"
@@ -9,15 +9,17 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type weeklyWork gormRepository
-
-func NewWeeklyWork(db *gorm.DB) repository.WeeklyWork {
-	return &weeklyWork{db}
+type weeklyWork struct {
+	gormRepository
 }
 
-func (work *weeklyWork) LoadTop3() ([]*domainModel.Work, error) {
+func NewWeeklyWork(db *gorm.DB) repository.Work {
+	return &weeklyWork{gormRepository{db}}
+}
+
+func (repo *weeklyWork) LoadTop3() ([]*domainModel.Work, error) {
 	mdls := make([]*dataModel.WeeklyWork, 0)
-	if err := work.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
+	if err := repo.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
 		return nil, err
 	}
 
@@ -47,11 +49,11 @@ func (work *weeklyWork) LoadTop3() ([]*domainModel.Work, error) {
 	return entities, nil
 }
 
-func (work *weeklyWork) LoadByScreenName(screenName string) (*domainModel.Work, error) {
+func (repo *weeklyWork) LoadByScreenName(screenName string) (*domainModel.Work, error) {
 	mdl := new(dataModel.WeeklyWork)
-	if err := work.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
+	if err := repo.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
-			return nil, errors.New("not found")
+			return nil, apperr.ErrRecordNotFound
 		}
 
 		return nil, err
@@ -78,7 +80,7 @@ func (work *weeklyWork) LoadByScreenName(screenName string) (*domainModel.Work, 
 	}, nil
 }
 
-func (work *weeklyWork) Save(entity *domainModel.Work) error {
+func (repo *weeklyWork) Save(entity *domainModel.Work) error {
 	mdl := &dataModel.WeeklyWork{
 		ScreenName:             entity.ScreenName,
 		TweetsCount:            entity.TweetsCount,
@@ -88,5 +90,5 @@ func (work *weeklyWork) Save(entity *domainModel.Work) error {
 		Point:                  &entity.Point,
 	}
 
-	return work.DB.Where("screen_name = ?", mdl.ScreenName).Assign(*mdl).FirstOrCreate(mdl).Error
+	return repo.store(repo.DB, mdl)
 }

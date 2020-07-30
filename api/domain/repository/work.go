@@ -4,8 +4,8 @@ package repository
 
 import "influ-dojo/api/domain/model"
 
-type WeeklyResult interface {
-	LoadTop3() ([]*model.Result, error)
-	LoadByScreenName(screenName string) (*model.Result, error)
-	Save(work *model.Result) error
+type Work interface {
+	LoadTop3() ([]*model.Work, error)
+	LoadByScreenName(screenName string) (*model.Work, error)
+	Save(work *model.Work) error
 }

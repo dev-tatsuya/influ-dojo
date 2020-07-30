@@ -12,8 +12,8 @@ import (
 func MakeDailyRankHandler(
 	follower client.Follower,
 	user repository.User,
-	work repository.DailyWork,
-	result repository.DailyResult,
+	work repository.Work,
+	result repository.Result,
 ) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		in := input.DailyRank{

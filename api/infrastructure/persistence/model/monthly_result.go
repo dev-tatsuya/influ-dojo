@@ -8,3 +8,11 @@ type MonthlyResult struct {
 	Point                  *int
 	Model
 }
+
+func (mdl *MonthlyResult) IsNew() bool {
+	return mdl.ID == 0
+}
+
+func (mdl *MonthlyResult) AttachID() error {
+	return nil
+}

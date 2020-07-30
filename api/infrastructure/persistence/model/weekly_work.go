@@ -10,3 +10,11 @@ type WeeklyWork struct {
 	Point                  *int
 	Model
 }
+
+func (mdl *WeeklyWork) IsNew() bool {
+	return mdl.ID == 0
+}
+
+func (mdl *WeeklyWork) AttachID() error {
+	return nil
+}

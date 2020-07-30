@@ -12,8 +12,8 @@ import (
 func MakeWeeklyRankHandler(
 	follower client.Follower,
 	user repository.User,
-	work repository.WeeklyWork,
-	result repository.WeeklyResult,
+	work repository.Work,
+	result repository.Result,
 ) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		in := input.WeeklyRank{
@@ -23,11 +23,10 @@ func MakeWeeklyRankHandler(
 			WeeklyResultRepo: result,
 		}
 
-		out, err := in.PostWeeklyRank()
-		if err != nil {
+		if err := in.PostWeeklyRank(); err != nil {
 			return err
 		}
 
-		return c.JSON(http.StatusOK, out)
+		return c.NoContent(http.StatusOK)
 	}
 }

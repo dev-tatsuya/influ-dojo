@@ -8,10 +8,10 @@ import (
 )
 
 type DailyRank struct {
-	FollowerClient  domainClient.Follower  `json:"-"`
-	UserRepo        repository.User        `json:"-"`
-	DailyWorkRepo   repository.DailyWork   `json:"-"`
-	DailyResultRepo repository.DailyResult `json:"-"`
+	FollowerClient  domainClient.Follower `json:"-"`
+	UserRepo        repository.User       `json:"-"`
+	DailyWorkRepo   repository.Work       `json:"-"`
+	DailyResultRepo repository.Result     `json:"-"`
 }
 
 func (rank *DailyRank) PostDailyRank() error {

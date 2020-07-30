@@ -12,8 +12,8 @@ import (
 func MakeMonthlyRankHandler(
 	follower client.Follower,
 	user repository.User,
-	work repository.MonthlyWork,
-	result repository.MonthlyResult,
+	work repository.Work,
+	result repository.Result,
 ) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		in := input.MonthlyRank{
@@ -23,11 +23,10 @@ func MakeMonthlyRankHandler(
 			MonthlyResultRepo: result,
 		}
 
-		out, err := in.PostMonthlyRank()
-		if err != nil {
+		if err := in.PostMonthlyRank(); err != nil {
 			return err
 		}
 
-		return c.JSON(http.StatusOK, out)
+		return c.NoContent(http.StatusOK)
 	}
 }

@@ -9,15 +9,17 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type dailyWork gormRepository
-
-func NewDailyWork(db *gorm.DB) repository.DailyWork {
-	return &dailyWork{db}
+type dailyWork struct {
+	gormRepository
 }
 
-func (work *dailyWork) LoadTop3() ([]*domainModel.Work, error) {
+func NewDailyWork(db *gorm.DB) repository.Work {
+	return &dailyWork{gormRepository{db}}
+}
+
+func (repo *dailyWork) LoadTop3() ([]*domainModel.Work, error) {
 	mdls := make([]*dataModel.DailyWork, 0)
-	if err := work.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
+	if err := repo.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
 		return nil, err
 	}
 
@@ -47,9 +49,9 @@ func (work *dailyWork) LoadTop3() ([]*domainModel.Work, error) {
 	return entities, nil
 }
 
-func (work *dailyWork) LoadByScreenName(screenName string) (*domainModel.Work, error) {
+func (repo *dailyWork) LoadByScreenName(screenName string) (*domainModel.Work, error) {
 	mdl := new(dataModel.DailyWork)
-	if err := work.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
+	if err := repo.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, apperr.ErrRecordNotFound
 		}
@@ -78,7 +80,7 @@ func (work *dailyWork) LoadByScreenName(screenName string) (*domainModel.Work, e
 	}, nil
 }
 
-func (work *dailyWork) Save(entity *domainModel.Work) error {
+func (repo *dailyWork) Save(entity *domainModel.Work) error {
 	mdl := &dataModel.DailyWork{
 		ScreenName:             entity.ScreenName,
 		TweetsCount:            entity.TweetsCount,
@@ -88,5 +90,5 @@ func (work *dailyWork) Save(entity *domainModel.Work) error {
 		Point:                  &entity.Point,
 	}
 
-	return work.DB.Where("screen_name = ?", mdl.ScreenName).Assign(*mdl).FirstOrCreate(mdl).Error
+	return repo.store(repo.DB, mdl)
 }

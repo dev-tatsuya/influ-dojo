@@ -9,15 +9,17 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type dailyResult gormRepository
-
-func NewDailyResult(db *gorm.DB) repository.DailyResult {
-	return &dailyResult{db}
+type dailyResult struct {
+	gormRepository
 }
 
-func (result *dailyResult) LoadTop3() ([]*domainModel.Result, error) {
+func NewDailyResult(db *gorm.DB) repository.Result {
+	return &dailyResult{gormRepository{db}}
+}
+
+func (repo *dailyResult) LoadTop3() ([]*domainModel.Result, error) {
 	mdls := make([]*dataModel.DailyResult, 0)
-	if err := result.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
+	if err := repo.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
 		return nil, err
 	}
 
@@ -42,9 +44,9 @@ func (result *dailyResult) LoadTop3() ([]*domainModel.Result, error) {
 	return entities, nil
 }
 
-func (result *dailyResult) LoadByScreenName(screenName string) (*domainModel.Result, error) {
+func (repo *dailyResult) LoadByScreenName(screenName string) (*domainModel.Result, error) {
 	mdl := new(dataModel.DailyResult)
-	if err := result.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
+	if err := repo.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, errors.New("not found")
 		}
@@ -68,7 +70,7 @@ func (result *dailyResult) LoadByScreenName(screenName string) (*domainModel.Res
 	}, nil
 }
 
-func (result *dailyResult) Save(entity *domainModel.Result) error {
+func (repo *dailyResult) Save(entity *domainModel.Result) error {
 	mdl := &dataModel.DailyResult{
 		ScreenName:             entity.ScreenName,
 		FollowersCount:         entity.FollowersCount,
@@ -76,5 +78,5 @@ func (result *dailyResult) Save(entity *domainModel.Result) error {
 		Point:                  &entity.Point,
 	}
 
-	return result.DB.Where("screen_name = ?", mdl.ScreenName).Assign(*mdl).FirstOrCreate(mdl).Error
+	return repo.store(repo.DB, mdl)
 }

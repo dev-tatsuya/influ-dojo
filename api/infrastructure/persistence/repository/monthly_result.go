@@ -9,15 +9,17 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type monthlyResult gormRepository
-
-func NewMonthlyResult(db *gorm.DB) repository.MonthlyResult {
-	return &monthlyResult{db}
+type monthlyResult struct {
+	gormRepository
 }
 
-func (result *monthlyResult) LoadTop3() ([]*domainModel.Result, error) {
+func NewMonthlyResult(db *gorm.DB) repository.Result {
+	return &monthlyResult{gormRepository{db}}
+}
+
+func (repo *monthlyResult) LoadTop3() ([]*domainModel.Result, error) {
 	mdls := make([]*dataModel.MonthlyResult, 0)
-	if err := result.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
+	if err := repo.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
 		return nil, err
 	}
 
@@ -42,9 +44,9 @@ func (result *monthlyResult) LoadTop3() ([]*domainModel.Result, error) {
 	return entities, nil
 }
 
-func (result *monthlyResult) LoadByScreenName(screenName string) (*domainModel.Result, error) {
+func (repo *monthlyResult) LoadByScreenName(screenName string) (*domainModel.Result, error) {
 	mdl := new(dataModel.MonthlyResult)
-	if err := result.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
+	if err := repo.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, errors.New("not found")
 		}
@@ -68,7 +70,7 @@ func (result *monthlyResult) LoadByScreenName(screenName string) (*domainModel.R
 	}, nil
 }
 
-func (result *monthlyResult) Save(entity *domainModel.Result) error {
+func (repo *monthlyResult) Save(entity *domainModel.Result) error {
 	mdl := &dataModel.MonthlyResult{
 		ScreenName:             entity.ScreenName,
 		FollowersCount:         entity.FollowersCount,
@@ -76,5 +78,5 @@ func (result *monthlyResult) Save(entity *domainModel.Result) error {
 		Point:                  &entity.Point,
 	}
 
-	return result.DB.Where("screen_name = ?", mdl.ScreenName).Assign(*mdl).FirstOrCreate(mdl).Error
+	return repo.store(repo.DB, mdl)
 }

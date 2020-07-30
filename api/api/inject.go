@@ -13,12 +13,12 @@ type Dependency struct {
 	FollowerClient    domainClient.Follower
 	BotClient         domainClient.Bot
 	UserRepo          repository.User
-	DailyWorkRepo     repository.DailyWork
-	DailyResultRepo   repository.DailyResult
-	WeeklyWorkRepo    repository.WeeklyWork
-	WeeklyResultRepo  repository.WeeklyResult
-	MonthlyWorkRepo   repository.MonthlyWork
-	MonthlyResultRepo repository.MonthlyResult
+	DailyWorkRepo     repository.Work
+	DailyResultRepo   repository.Result
+	WeeklyWorkRepo    repository.Work
+	WeeklyResultRepo  repository.Result
+	MonthlyWorkRepo   repository.Work
+	MonthlyResultRepo repository.Result
 }
 
 func Inject(cfg *Config, db *gorm.DB) (*Dependency, error) {
@@ -34,7 +34,7 @@ func Inject(cfg *Config, db *gorm.DB) (*Dependency, error) {
 		DailyWorkRepo:     persistence.NewDailyWork(db),
 		DailyResultRepo:   persistence.NewDailyResult(db),
 		WeeklyWorkRepo:    persistence.NewWeeklyWork(db),
-		WeeklyResultRepo:  persistence.NewDailyResult(db),
+		WeeklyResultRepo:  persistence.NewWeeklyResult(db),
 		MonthlyWorkRepo:   persistence.NewMonthlyWork(db),
 		MonthlyResultRepo: persistence.NewMonthlyResult(db),
 	}, nil

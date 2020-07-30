@@ -6,9 +6,9 @@ import (
 )
 
 type DailyTweet struct {
-	Bot             client.Bot             `json:"-"`
-	DailyWorkRepo   repository.DailyWork   `json:"-"`
-	DailyResultRepo repository.DailyResult `json:"-"`
+	Bot             client.Bot        `json:"-"`
+	DailyWorkRepo   repository.Work   `json:"-"`
+	DailyResultRepo repository.Result `json:"-"`
 }
 
 func (dt *DailyTweet) TweetDaily() error {
