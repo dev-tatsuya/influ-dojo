@@ -34,17 +34,17 @@ func (m *MockBot) EXPECT() *MockBotMockRecorder {
 }
 
 // Tweet mocks base method.
-func (m *MockBot) Tweet(work []*model.Work, result []*model.Result) error {
+func (m *MockBot) Tweet(work []*model.Work, result []*model.Result, path string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Tweet", work, result)
+	ret := m.ctrl.Call(m, "Tweet", work, result, path)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Tweet indicates an expected call of Tweet.
-func (mr *MockBotMockRecorder) Tweet(work, result interface{}) *gomock.Call {
+func (mr *MockBotMockRecorder) Tweet(work, result, path interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Tweet", reflect.TypeOf((*MockBot)(nil).Tweet), work, result)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Tweet", reflect.TypeOf((*MockBot)(nil).Tweet), work, result, path)
 }
 
 // Favorite mocks base method.

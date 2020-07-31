@@ -22,6 +22,7 @@ type Dependency struct {
 	WeeklyResultRepo  repository.Result
 	MonthlyWorkRepo   repository.Work
 	MonthlyResultRepo repository.Result
+	RankingRepo       repository.Ranking
 	RankingQuery      domainQueryService.Ranking
 }
 
@@ -41,6 +42,7 @@ func Inject(cfg *Config, db *gorm.DB, rd *redis.Client) (*Dependency, error) {
 		WeeklyResultRepo:  persistence.NewWeeklyResult(db),
 		MonthlyWorkRepo:   persistence.NewMonthlyWork(db),
 		MonthlyResultRepo: persistence.NewMonthlyResult(db),
+		RankingRepo:       persistence.NewRanking(rd),
 		RankingQuery:      queryService.NewRanking(db),
 	}, nil
 }

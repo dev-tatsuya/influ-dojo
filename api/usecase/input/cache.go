@@ -1,12 +1,13 @@
 package input
 
 import (
-	"fmt"
+	"influ-dojo/api/domain/repository"
 	queryService "influ-dojo/api/usecase/query"
 )
 
 type Cache struct {
 	RankingQuery queryService.Ranking
+	RankingRepo  repository.Ranking
 }
 
 func (in *Cache) Cache() error {
@@ -15,8 +16,5 @@ func (in *Cache) Cache() error {
 		return err
 	}
 
-	// redisに格納
-	fmt.Println(all)
-
-	return nil
+	return in.RankingRepo.Store(all)
 }
