@@ -4,7 +4,6 @@ import (
 	"influ-dojo/api/domain/apperr"
 	domainClient "influ-dojo/api/domain/client"
 	"influ-dojo/api/domain/repository"
-	"influ-dojo/api/domain/utils"
 )
 
 type Record struct {
@@ -21,11 +20,6 @@ func (in *Record) Record() error {
 	}
 
 	for _, f := range followers {
-		//TODO
-		if f == nil {
-			continue
-		}
-
 		user, err := in.UserRepo.LoadByID(f.User.UserID)
 		if err != nil {
 			if err == apperr.ErrRecordNotFound {
@@ -69,15 +63,9 @@ func (in *Record) Record() error {
 			return err
 		}
 
-		work.IncreaseTweetsCount = utils.Sub(f.TweetsCount, work.TweetsCount)
-		work.IncreaseFavoritesCount = utils.Sub(f.FavoritesCount, work.FavoritesCount)
-		work.SetPoint()
-		work.TweetsCount = f.TweetsCount
-		work.FavoritesCount = f.FavoritesCount
+		work.UpdateCount(f.TweetsCount, f.FavoritesCount)
 
-		result.IncreaseFollowersCount = utils.Sub(f.FollowersCount, result.FollowersCount)
-		result.SetPoint()
-		result.FollowersCount = f.FollowersCount
+		result.UpdateCount(f.FollowersCount)
 
 		if err := in.WorkRepo.Save(work); err != nil {
 			return err
