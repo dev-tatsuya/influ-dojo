@@ -39,7 +39,9 @@ func setRouting(d *Dependency, e *echo.Echo) {
 	record.POST("/monthly", handler.MakeRecordHandler(d.FollowerClient, d.UserRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo))
 
 	tweet := webAPI.Group("/tweet")
-	tweet.POST("/daily", handler.MakeDailyTweetHandler(d.BotClient, d.DailyWorkRepo, d.DailyResultRepo))
+	tweet.POST("/daily", handler.MakeTweetHandler(d.BotClient, d.DailyWorkRepo, d.DailyResultRepo))
+	tweet.POST("/weekly", handler.MakeTweetHandler(d.BotClient, d.WeeklyWorkRepo, d.WeeklyResultRepo))
+	tweet.POST("/monthly", handler.MakeTweetHandler(d.BotClient, d.MonthlyWorkRepo, d.MonthlyResultRepo))
 }
 
 func StartWebServer(e *echo.Echo, cfg *Config) error {

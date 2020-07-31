@@ -5,6 +5,6 @@ package client
 import "influ-dojo/api/domain/model"
 
 type Bot interface {
-	Tweet(work []*model.Work, result []*model.Result) error
+	Tweet(work []*model.Work, result []*model.Result, path string) error
 	Favorite() error
 }

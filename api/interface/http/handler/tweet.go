@@ -9,19 +9,20 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func MakeDailyTweetHandler(
+func MakeTweetHandler(
 	bot client.Bot,
 	work repository.Work,
 	result repository.Result,
 ) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		in := input.DailyTweet{
-			Bot:             bot,
-			DailyWorkRepo:   work,
-			DailyResultRepo: result,
+		in := input.Tweet{
+			Path:       c.Path(),
+			Bot:        bot,
+			WorkRepo:   work,
+			ResultRepo: result,
 		}
 
-		if err := in.TweetDaily(); err != nil {
+		if err := in.Tweet(); err != nil {
 			return err
 		}
 

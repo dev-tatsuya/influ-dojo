@@ -8,6 +8,7 @@ import (
 	"math"
 	"math/rand"
 	"net/url"
+	"path"
 	"strconv"
 	"time"
 )
@@ -16,15 +17,21 @@ type bot struct {
 	*twitter
 }
 
+var period = map[string]string{
+	"daily":   "デイリー",
+	"weekly":  "ウィークリー",
+	"monthly": "マンスリー",
+}
+
 func NewBot(accessToken, accessTokenSecret, consumerKey, consumerSecret string) client.Bot {
 	return &bot{
-		newTwitter(accessToken, accessTokenSecret, consumerKey, consumerSecret),
+		twitter: newTwitter(accessToken, accessTokenSecret, consumerKey, consumerSecret),
 	}
 }
 
-func (b *bot) Tweet(works []*model.Work, results []*model.Result) error {
+func (b *bot) Tweet(works []*model.Work, results []*model.Result, pathStr string) error {
 	body := fmt.Sprintf(`
-【デイリー速報 %v】
+【%s速報 %v】
 
 ［作業ランキング］
 🥇 %dpt @%s
@@ -39,7 +46,7 @@ func (b *bot) Tweet(works []*model.Work, results []*model.Result) error {
 ▼ 4位以下はコチラ ▼
 example.com
 `,
-		time.Now().Format("1/2 15:04"),
+		period[path.Base(pathStr)], time.Now().Format("1/2 15:04"),
 		works[0].Point, works[0].ScreenName, works[1].Point, works[1].ScreenName, works[2].Point, works[2].ScreenName,
 		results[0].Point, results[0].ScreenName, results[1].Point, results[1].ScreenName, results[2].Point, results[2].ScreenName,
 	)
