@@ -2,7 +2,6 @@ package input
 
 import (
 	"influ-dojo/api/domain/repository"
-	"log"
 )
 
 type Ranking struct {
@@ -15,8 +14,6 @@ func (in *Ranking) Rank() error {
 	if err != nil {
 		return err
 	}
-
-	log.Printf("works len %d: %+v", len(works), works)
 
 	ranking := 1
 	for i, work := range works {
@@ -50,7 +47,7 @@ func (in *Ranking) Rank() error {
 			result.MakeRankingPast()
 			result.Ranking = ranking
 		} else {
-			if result.Point == works[i-1].Point {
+			if result.Point == results[i-1].Point {
 				result.MakeRankingPast()
 				result.Ranking = ranking
 			} else {
