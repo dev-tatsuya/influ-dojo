@@ -5,13 +5,13 @@ import (
 	"log"
 )
 
-type RankRecord struct {
-	DailyWorkRepo   repository.Work   `json:"-"`
-	DailyResultRepo repository.Result `json:"-"`
+type Ranking struct {
+	WorkRepo   repository.Work   `json:"-"`
+	ResultRepo repository.Result `json:"-"`
 }
 
-func (in *RankRecord) RankDaily() error {
-	works, err := in.DailyWorkRepo.LoadOrderByRanking()
+func (in *Ranking) Rank() error {
+	works, err := in.WorkRepo.LoadOrderByRanking()
 	if err != nil {
 		return err
 	}
@@ -34,12 +34,12 @@ func (in *RankRecord) RankDaily() error {
 			}
 		}
 
-		if err := in.DailyWorkRepo.Save(work); err != nil {
+		if err := in.WorkRepo.Save(work); err != nil {
 			return err
 		}
 	}
 
-	results, err := in.DailyResultRepo.LoadOrderByRanking()
+	results, err := in.ResultRepo.LoadOrderByRanking()
 	if err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func (in *RankRecord) RankDaily() error {
 			}
 		}
 
-		if err := in.DailyResultRepo.Save(result); err != nil {
+		if err := in.ResultRepo.Save(result); err != nil {
 			return err
 		}
 	}

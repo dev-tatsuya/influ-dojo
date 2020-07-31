@@ -8,17 +8,17 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func MakeRankDailyHandler(
+func MakeRankingHandler(
 	work repository.Work,
 	result repository.Result,
 ) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		in := input.RankRecord{
-			DailyWorkRepo:   work,
-			DailyResultRepo: result,
+		in := input.Ranking{
+			WorkRepo:   work,
+			ResultRepo: result,
 		}
 
-		if err := in.RankDaily(); err != nil {
+		if err := in.Rank(); err != nil {
 			return err
 		}
 
