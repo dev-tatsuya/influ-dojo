@@ -11,11 +11,11 @@ import (
 )
 
 type dailyWork struct {
-	gormRepository
+	GormRepository
 }
 
 func NewDailyWork(db *gorm.DB) repository.Work {
-	return &dailyWork{gormRepository{db}}
+	return &dailyWork{GormRepository{db}}
 }
 
 func (repo *dailyWork) LoadOrderByRanking() ([]*domainModel.Work, error) {

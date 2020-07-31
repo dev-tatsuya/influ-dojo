@@ -9,7 +9,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type user gormRepository
+type user GormRepository
 
 func NewUser(db *gorm.DB) repository.User {
 	return &user{db}

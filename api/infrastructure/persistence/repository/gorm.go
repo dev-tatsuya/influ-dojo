@@ -7,11 +7,11 @@ import (
 	"golang.org/x/xerrors"
 )
 
-type gormRepository struct {
+type GormRepository struct {
 	DB *gorm.DB
 }
 
-func (repo *gormRepository) store(db *gorm.DB, mdl model.GormModel) error {
+func (repo *GormRepository) store(db *gorm.DB, mdl model.GormModel) error {
 	if mdl.IsNew() {
 		if err := mdl.AttachID(); err != nil {
 			return xerrors.Errorf("failed to attach ID: %w", err)

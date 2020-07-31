@@ -11,11 +11,11 @@ import (
 )
 
 type weeklyResult struct {
-	gormRepository
+	GormRepository
 }
 
 func NewWeeklyResult(db *gorm.DB) repository.Result {
-	return &weeklyResult{gormRepository{db}}
+	return &weeklyResult{GormRepository{db}}
 }
 
 func (repo *weeklyResult) LoadOrderByRanking() ([]*domainModel.Result, error) {

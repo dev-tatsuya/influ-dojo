@@ -11,11 +11,11 @@ import (
 )
 
 type monthlyWork struct {
-	gormRepository
+	GormRepository
 }
 
 func NewMonthlyWork(db *gorm.DB) repository.Work {
-	return &monthlyWork{gormRepository{db}}
+	return &monthlyWork{GormRepository{db}}
 }
 
 func (repo *monthlyWork) LoadOrderByRanking() ([]*domainModel.Work, error) {
