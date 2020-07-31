@@ -32,6 +32,7 @@ func setRouting(d *Dependency, e *echo.Echo) {
 	ranking.POST("/weekly", handler.MakeRankingHandler(d.WeeklyWorkRepo, d.WeeklyResultRepo))
 	ranking.POST("/monthly", handler.MakeRankingHandler(d.MonthlyWorkRepo, d.MonthlyResultRepo))
 	ranking.POST("/cache", handler.MakeCacheHandler(d.RankingQuery, d.RankingRepo))
+	ranking.GET("/all", handler.MakeRankingAllHandler(d.RankingRepo))
 
 	record := webAPI.Group("/record")
 	record.POST("/daily", handler.MakeRecordHandler(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo))

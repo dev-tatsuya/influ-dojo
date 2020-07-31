@@ -5,5 +5,6 @@ package repository
 import "influ-dojo/api/usecase/dto"
 
 type Ranking interface {
+	LoadAll() (*dto.RankingAll, error)
 	Store(all *dto.RankingAll) error
 }

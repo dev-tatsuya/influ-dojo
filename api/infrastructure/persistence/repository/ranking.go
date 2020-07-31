@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"encoding/json"
+	"influ-dojo/api/domain/apperr"
 	"influ-dojo/api/domain/repository"
 	"influ-dojo/api/usecase/dto"
 
@@ -22,6 +23,24 @@ func NewRanking(client *redis.Client) repository.Ranking {
 		Client: client,
 		Ctx:    context.Background(),
 	}}
+}
+
+func (repo *ranking) LoadAll() (*dto.RankingAll, error) {
+	record, err := repo.Client.HGet(repo.Ctx, Ranking, RankingAll).Result()
+	if err != nil {
+		if err == redis.Nil {
+			return nil, apperr.ErrRecordNotFound
+		}
+
+		return nil, xerrors.Errorf("failed to load ranking: %w", err)
+	}
+
+	all := new(dto.RankingAll)
+	if err := json.Unmarshal([]byte(record), all); err != nil {
+		return nil, xerrors.Errorf("failed to decode from JSON: %w", err)
+	}
+
+	return all, nil
 }
 
 func (repo *ranking) Store(all *dto.RankingAll) error {

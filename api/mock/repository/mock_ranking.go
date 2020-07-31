@@ -33,6 +33,21 @@ func (m *MockRanking) EXPECT() *MockRankingMockRecorder {
 	return m.recorder
 }
 
+// LoadAll mocks base method.
+func (m *MockRanking) LoadAll() (*dto.RankingAll, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LoadAll")
+	ret0, _ := ret[0].(*dto.RankingAll)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LoadAll indicates an expected call of LoadAll.
+func (mr *MockRankingMockRecorder) LoadAll() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadAll", reflect.TypeOf((*MockRanking)(nil).LoadAll))
+}
+
 // Store mocks base method.
 func (m *MockRanking) Store(all *dto.RankingAll) error {
 	m.ctrl.T.Helper()
