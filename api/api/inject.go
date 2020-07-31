@@ -6,6 +6,7 @@ import (
 	infraClient "influ-dojo/api/infrastructure/client"
 	persistence "influ-dojo/api/infrastructure/persistence/repository"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/jinzhu/gorm"
 )
 
@@ -21,7 +22,7 @@ type Dependency struct {
 	MonthlyResultRepo repository.Result
 }
 
-func Inject(cfg *Config, db *gorm.DB) (*Dependency, error) {
+func Inject(cfg *Config, db *gorm.DB, rd *redis.Client) (*Dependency, error) {
 	at := cfg.Twitter.AccessToken
 	ats := cfg.Twitter.AccessTokenSecret
 	ck := cfg.Twitter.ConsumerKey

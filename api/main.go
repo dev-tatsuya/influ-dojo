@@ -54,7 +54,12 @@ func main() {
 		&dataModel.MonthlyResult{},
 	)
 
-	dependency, err := api.Inject(cfg, db)
+	rd, err := api.ConnectRedis(cfg)
+	if err != nil {
+		log.Fatalf("%+v", err)
+	}
+
+	dependency, err := api.Inject(cfg, db, rd)
 	if err != nil {
 		log.Fatalf("%+v", err)
 	}

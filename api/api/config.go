@@ -28,6 +28,10 @@ type Config struct {
 		Password string `yaml:"password" validate:"required"`
 		Database string `yaml:"database" validate:"required"`
 	} `yaml:"db"`
+	Redis struct {
+		Host string `yaml:"host"`
+		Port int    `yaml:"port"`
+	} `yaml:"redis"`
 }
 
 func LoadConfig(path string) (*Config, error) {

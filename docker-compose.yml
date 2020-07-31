@@ -30,3 +30,12 @@ services:
       - .:/go/src/influ-dojo
     depends_on:
       - db
+      - redis
+
+  redis:
+    image: redis:6.0.6-alpine
+    container_name: influ-dojo-redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ./docker/redis:/data
