@@ -7,20 +7,21 @@ import (
 	"influ-dojo/api/domain/utils"
 )
 
-type MonthlyRecord struct {
-	FollowerClient    domainClient.Follower `json:"-"`
-	UserRepo          repository.User       `json:"-"`
-	MonthlyWorkRepo   repository.Work       `json:"-"`
-	MonthlyResultRepo repository.Result     `json:"-"`
+type Record struct {
+	FollowerClient domainClient.Follower `json:"-"`
+	UserRepo       repository.User       `json:"-"`
+	WorkRepo       repository.Work       `json:"-"`
+	ResultRepo     repository.Result     `json:"-"`
 }
 
-func (in *MonthlyRecord) RecordMonthly() error {
+func (in *Record) Record() error {
 	followers, err := in.FollowerClient.GetFollowers()
 	if err != nil {
 		return err
 	}
 
 	for _, f := range followers {
+		//TODO
 		if f == nil {
 			continue
 		}
@@ -32,11 +33,11 @@ func (in *MonthlyRecord) RecordMonthly() error {
 					return err
 				}
 
-				if err := in.MonthlyWorkRepo.Save(f.Work); err != nil {
+				if err := in.WorkRepo.Save(f.Work); err != nil {
 					return err
 				}
 
-				if err := in.MonthlyResultRepo.Save(f.Result); err != nil {
+				if err := in.ResultRepo.Save(f.Result); err != nil {
 					return err
 				}
 
@@ -46,14 +47,14 @@ func (in *MonthlyRecord) RecordMonthly() error {
 			return err
 		}
 
-		work, err := in.MonthlyWorkRepo.LoadByScreenName(user.ScreenName)
+		work, err := in.WorkRepo.LoadByScreenName(user.ScreenName)
 		if err != nil {
 			if err == apperr.ErrRecordNotFound {
-				if err := in.MonthlyWorkRepo.Save(f.Work); err != nil {
+				if err := in.WorkRepo.Save(f.Work); err != nil {
 					return err
 				}
 
-				if err := in.MonthlyResultRepo.Save(f.Result); err != nil {
+				if err := in.ResultRepo.Save(f.Result); err != nil {
 					return err
 				}
 
@@ -63,7 +64,7 @@ func (in *MonthlyRecord) RecordMonthly() error {
 			return err
 		}
 
-		result, err := in.MonthlyResultRepo.LoadByScreenName(user.ScreenName)
+		result, err := in.ResultRepo.LoadByScreenName(user.ScreenName)
 		if err != nil {
 			return err
 		}
@@ -78,11 +79,11 @@ func (in *MonthlyRecord) RecordMonthly() error {
 		result.SetPoint()
 		result.FollowersCount = f.FollowersCount
 
-		if err := in.MonthlyWorkRepo.Save(work); err != nil {
+		if err := in.WorkRepo.Save(work); err != nil {
 			return err
 		}
 
-		if err := in.MonthlyResultRepo.Save(result); err != nil {
+		if err := in.ResultRepo.Save(result); err != nil {
 			return err
 		}
 	}

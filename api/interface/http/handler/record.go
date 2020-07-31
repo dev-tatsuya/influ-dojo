@@ -9,21 +9,21 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func MakeRecordWeeklyHandler(
+func MakeRecordHandler(
 	follower client.Follower,
 	user repository.User,
 	work repository.Work,
 	result repository.Result,
 ) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		in := input.WeeklyRecord{
-			FollowerClient:   follower,
-			UserRepo:         user,
-			WeeklyWorkRepo:   work,
-			WeeklyResultRepo: result,
+		in := input.Record{
+			FollowerClient: follower,
+			UserRepo:       user,
+			WorkRepo:       work,
+			ResultRepo:     result,
 		}
 
-		if err := in.RecordWeekly(); err != nil {
+		if err := in.Record(); err != nil {
 			return err
 		}
 
