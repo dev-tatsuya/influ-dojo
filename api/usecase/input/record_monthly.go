@@ -68,18 +68,21 @@ func (in *MonthlyRecord) RecordMonthly() error {
 			return err
 		}
 
-		f.Work.IncreaseTweetsCount = utils.Sub(f.TweetsCount, work.TweetsCount)
-		f.Work.IncreaseFavoritesCount = utils.Sub(f.FavoritesCount, work.FavoritesCount)
-		f.Work.SetPoint()
+		work.IncreaseTweetsCount = utils.Sub(f.TweetsCount, work.TweetsCount)
+		work.IncreaseFavoritesCount = utils.Sub(f.FavoritesCount, work.FavoritesCount)
+		work.SetPoint()
+		work.TweetsCount = f.TweetsCount
+		work.FavoritesCount = f.FavoritesCount
 
-		f.Result.IncreaseFollowersCount = utils.Sub(f.FollowersCount, result.FollowersCount)
-		f.Result.SetPoint()
+		result.IncreaseFollowersCount = utils.Sub(f.FollowersCount, result.FollowersCount)
+		result.SetPoint()
+		result.FollowersCount = f.FollowersCount
 
-		if err := in.MonthlyWorkRepo.Save(f.Work); err != nil {
+		if err := in.MonthlyWorkRepo.Save(work); err != nil {
 			return err
 		}
 
-		if err := in.MonthlyResultRepo.Save(f.Result); err != nil {
+		if err := in.MonthlyResultRepo.Save(result); err != nil {
 			return err
 		}
 	}

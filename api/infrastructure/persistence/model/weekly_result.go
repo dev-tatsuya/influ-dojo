@@ -1,10 +1,14 @@
 package model
 
+import "influ-dojo/api/domain/model"
+
 type WeeklyResult struct {
 	ScreenName             string `gorm:"primary_key"`
 	FollowersCount         int
 	IncreaseFollowersCount *int
 	Point                  *int
+	Ranking                int
+	LastRanking            int
 	Model
 }
 
@@ -14,4 +18,23 @@ func (mdl *WeeklyResult) IsNew() bool {
 
 func (mdl *WeeklyResult) AttachID() error {
 	return nil
+}
+
+func (mdl *WeeklyResult) MakeEntity() *model.Result {
+	count := 0
+	if mdl.IncreaseFollowersCount == nil {
+		mdl.IncreaseFollowersCount = &count
+	}
+	if mdl.Point == nil {
+		mdl.Point = &count
+	}
+
+	return &model.Result{
+		ScreenName:             mdl.ScreenName,
+		FollowersCount:         mdl.FollowersCount,
+		IncreaseFollowersCount: *mdl.IncreaseFollowersCount,
+		Point:                  *mdl.Point,
+		Ranking:                mdl.Ranking,
+		LastRanking:            mdl.LastRanking,
+	}
 }

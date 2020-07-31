@@ -7,6 +7,7 @@ import (
 	dataModel "influ-dojo/api/infrastructure/persistence/model"
 
 	"github.com/jinzhu/gorm"
+	"golang.org/x/xerrors"
 )
 
 type monthlyWork struct {
@@ -18,7 +19,17 @@ func NewMonthlyWork(db *gorm.DB) repository.Work {
 }
 
 func (repo *monthlyWork) LoadOrderByRanking() ([]*domainModel.Work, error) {
-	panic("implement me")
+	mdls := make([]*dataModel.MonthlyWork, 0)
+	if err := repo.DB.Order("point desc").Find(&mdls).Error; err != nil {
+		return nil, xerrors.Errorf("failed to load work ranking: %w", err)
+	}
+
+	entities := make([]*domainModel.Work, 0)
+	for _, mdl := range mdls {
+		entities = append(entities, mdl.MakeEntity())
+	}
+
+	return entities, nil
 }
 
 func (repo *monthlyWork) LoadTop3() ([]*domainModel.Work, error) {
@@ -27,27 +38,9 @@ func (repo *monthlyWork) LoadTop3() ([]*domainModel.Work, error) {
 		return nil, err
 	}
 
-	count := 0
 	entities := make([]*domainModel.Work, 0)
 	for _, mdl := range mdls {
-		if mdl.IncreaseTweetsCount == nil {
-			mdl.IncreaseTweetsCount = &count
-		}
-		if mdl.IncreaseFavoritesCount == nil {
-			mdl.IncreaseFavoritesCount = &count
-		}
-		if mdl.Point == nil {
-			mdl.Point = &count
-		}
-
-		entities = append(entities, &domainModel.Work{
-			ScreenName:             mdl.ScreenName,
-			TweetsCount:            mdl.TweetsCount,
-			IncreaseTweetsCount:    *mdl.IncreaseTweetsCount,
-			FavoritesCount:         mdl.FavoritesCount,
-			IncreaseFavoritesCount: *mdl.IncreaseFavoritesCount,
-			Point:                  *mdl.Point,
-		})
+		entities = append(entities, mdl.MakeEntity())
 	}
 
 	return entities, nil
@@ -63,25 +56,7 @@ func (repo *monthlyWork) LoadByScreenName(screenName string) (*domainModel.Work,
 		return nil, err
 	}
 
-	count := 0
-	if mdl.IncreaseTweetsCount == nil {
-		mdl.IncreaseTweetsCount = &count
-	}
-	if mdl.IncreaseFavoritesCount == nil {
-		mdl.IncreaseFavoritesCount = &count
-	}
-	if mdl.Point == nil {
-		mdl.Point = &count
-	}
-
-	return &domainModel.Work{
-		ScreenName:             mdl.ScreenName,
-		TweetsCount:            mdl.TweetsCount,
-		IncreaseTweetsCount:    *mdl.IncreaseTweetsCount,
-		FavoritesCount:         mdl.FavoritesCount,
-		IncreaseFavoritesCount: *mdl.IncreaseFavoritesCount,
-		Point:                  *mdl.Point,
-	}, nil
+	return mdl.MakeEntity(), nil
 }
 
 func (repo *monthlyWork) Save(entity *domainModel.Work) error {
@@ -92,6 +67,8 @@ func (repo *monthlyWork) Save(entity *domainModel.Work) error {
 		FavoritesCount:         entity.FavoritesCount,
 		IncreaseFavoritesCount: &entity.IncreaseFavoritesCount,
 		Point:                  &entity.Point,
+		Ranking:                entity.Ranking,
+		LastRanking:            entity.LastRanking,
 	}
 
 	return repo.store(repo.DB, mdl)

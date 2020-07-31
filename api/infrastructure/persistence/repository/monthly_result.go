@@ -7,6 +7,7 @@ import (
 	dataModel "influ-dojo/api/infrastructure/persistence/model"
 
 	"github.com/jinzhu/gorm"
+	"golang.org/x/xerrors"
 )
 
 type monthlyResult struct {
@@ -18,7 +19,17 @@ func NewMonthlyResult(db *gorm.DB) repository.Result {
 }
 
 func (repo *monthlyResult) LoadOrderByRanking() ([]*domainModel.Result, error) {
-	panic("implement me")
+	mdls := make([]*dataModel.MonthlyResult, 0)
+	if err := repo.DB.Order("point desc").Find(&mdls).Error; err != nil {
+		return nil, xerrors.Errorf("failed to load result ranking: %w", err)
+	}
+
+	entities := make([]*domainModel.Result, 0)
+	for _, mdl := range mdls {
+		entities = append(entities, mdl.MakeEntity())
+	}
+
+	return entities, nil
 }
 
 func (repo *monthlyResult) LoadTop3() ([]*domainModel.Result, error) {
@@ -29,20 +40,7 @@ func (repo *monthlyResult) LoadTop3() ([]*domainModel.Result, error) {
 
 	entities := make([]*domainModel.Result, 0)
 	for _, mdl := range mdls {
-		count := 0
-		if mdl.IncreaseFollowersCount == nil {
-			mdl.IncreaseFollowersCount = &count
-		}
-		if mdl.Point == nil {
-			mdl.Point = &count
-		}
-
-		entities = append(entities, &domainModel.Result{
-			ScreenName:             mdl.ScreenName,
-			FollowersCount:         mdl.FollowersCount,
-			IncreaseFollowersCount: *mdl.IncreaseFollowersCount,
-			Point:                  *mdl.Point,
-		})
+		entities = append(entities, mdl.MakeEntity())
 	}
 
 	return entities, nil
@@ -58,20 +56,7 @@ func (repo *monthlyResult) LoadByScreenName(screenName string) (*domainModel.Res
 		return nil, err
 	}
 
-	count := 0
-	if mdl.IncreaseFollowersCount == nil {
-		mdl.IncreaseFollowersCount = &count
-	}
-	if mdl.Point == nil {
-		mdl.Point = &count
-	}
-
-	return &domainModel.Result{
-		ScreenName:             mdl.ScreenName,
-		FollowersCount:         mdl.FollowersCount,
-		IncreaseFollowersCount: *mdl.IncreaseFollowersCount,
-		Point:                  *mdl.Point,
-	}, nil
+	return mdl.MakeEntity(), nil
 }
 
 func (repo *monthlyResult) Save(entity *domainModel.Result) error {
@@ -80,6 +65,8 @@ func (repo *monthlyResult) Save(entity *domainModel.Result) error {
 		FollowersCount:         entity.FollowersCount,
 		IncreaseFollowersCount: &entity.IncreaseFollowersCount,
 		Point:                  &entity.Point,
+		Ranking:                entity.Ranking,
+		LastRanking:            entity.LastRanking,
 	}
 
 	return repo.store(repo.DB, mdl)

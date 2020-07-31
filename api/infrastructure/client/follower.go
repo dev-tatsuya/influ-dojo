@@ -41,7 +41,7 @@ func (f follower) GetFollowers() ([]*model.Follower, error) {
 	}
 	fmt.Println("followers count:", len(users))
 
-	followers := make([]*model.Follower, len(users))
+	followers := make([]*model.Follower, 0)
 	for _, f := range users {
 		f := &model.Follower{
 			User: &model.User{

@@ -5,7 +5,6 @@ import (
 	domainClient "influ-dojo/api/domain/client"
 	"influ-dojo/api/domain/repository"
 	"influ-dojo/api/domain/utils"
-	"log"
 )
 
 type WeeklyRecord struct {
@@ -49,7 +48,6 @@ func (in *WeeklyRecord) RecordWeekly() error {
 
 		work, err := in.WeeklyWorkRepo.LoadByScreenName(user.ScreenName)
 		if err != nil {
-			log.Printf("why: %+v", err)
 			if err == apperr.ErrRecordNotFound {
 				if err := in.WeeklyWorkRepo.Save(f.Work); err != nil {
 					return err
@@ -70,18 +68,21 @@ func (in *WeeklyRecord) RecordWeekly() error {
 			return err
 		}
 
-		f.Work.IncreaseTweetsCount = utils.Sub(f.TweetsCount, work.TweetsCount)
-		f.Work.IncreaseFavoritesCount = utils.Sub(f.FavoritesCount, work.FavoritesCount)
-		f.Work.SetPoint()
+		work.IncreaseTweetsCount = utils.Sub(f.TweetsCount, work.TweetsCount)
+		work.IncreaseFavoritesCount = utils.Sub(f.FavoritesCount, work.FavoritesCount)
+		work.SetPoint()
+		work.TweetsCount = f.TweetsCount
+		work.FavoritesCount = f.FavoritesCount
 
-		f.Result.IncreaseFollowersCount = utils.Sub(f.FollowersCount, result.FollowersCount)
-		f.Result.SetPoint()
+		result.IncreaseFollowersCount = utils.Sub(f.FollowersCount, result.FollowersCount)
+		result.SetPoint()
+		result.FollowersCount = f.FollowersCount
 
-		if err := in.WeeklyWorkRepo.Save(f.Work); err != nil {
+		if err := in.WeeklyWorkRepo.Save(work); err != nil {
 			return err
 		}
 
-		if err := in.WeeklyResultRepo.Save(f.Result); err != nil {
+		if err := in.WeeklyResultRepo.Save(result); err != nil {
 			return err
 		}
 	}
