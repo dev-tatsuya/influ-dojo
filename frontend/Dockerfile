@@ -1,4 +1,4 @@
-FROM debian:stable AS build-env
+FROM google/dart AS build-env
 
 RUN apt-get update && \
     apt-get install -y curl git wget zip unzip libgconf-2-4 gdb libstdc++6 libglu1-mesa fonts-droid-fallback \
@@ -14,9 +14,9 @@ RUN flutter channel master
 RUN flutter upgrade
 RUN flutter config --enable-web
 
-WORKDIR /usr/local/sample_docker
-COPY . /usr/local/sample_docker
+WORKDIR /usr/local/influ_dojo
+COPY . /usr/local/influ_dojo
 RUN flutter build web
 
 FROM nginx
-COPY --from=build-env /usr/local/sample_docker/build/web /usr/share/nginx/html
+COPY --from=build-env /usr/local/influ_dojo/build/web /usr/share/nginx/html
