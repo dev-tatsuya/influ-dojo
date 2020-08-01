@@ -67,6 +67,12 @@ func (in *Record) Record() error {
 
 		result.UpdateCount(f.FollowersCount)
 
+		if user.IsUpdateRequired(f.Name, f.User.ScreenName, f.ProfileImage) {
+			if err := in.UserRepo.Save(user); err != nil {
+				return err
+			}
+		}
+
 		if err := in.WorkRepo.Save(work); err != nil {
 			return err
 		}
