@@ -64,6 +64,8 @@ func main() {
 		log.Fatalf("%+v", err)
 	}
 
+	api.NewCron(dependency)
+
 	e := api.NewWebServer(dependency)
 	if err := api.StartWebServer(e, cfg); err != nil {
 		log.Fatalf("%+v", err)
