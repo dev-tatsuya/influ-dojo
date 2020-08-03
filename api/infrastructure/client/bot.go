@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"influ-dojo/api/domain/client"
 	"influ-dojo/api/domain/model"
-	"log"
 	"math"
 	"math/rand"
 	"net/url"
 	"path"
 	"strconv"
 	"time"
+
+	"golang.org/x/xerrors"
 )
 
 type bot struct {
@@ -91,8 +92,7 @@ func (b *bot) Favorite() error {
 				continue
 			}
 
-			log.Printf("failed to favorite: %+v", err)
-			return err
+			return xerrors.Errorf("failed to favorite: %w", err)
 		}
 	}
 
