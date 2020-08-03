@@ -4,6 +4,7 @@ import (
 	"influ-dojo/api/domain/repository"
 	"influ-dojo/api/usecase/input"
 	queryService "influ-dojo/api/usecase/query"
+	"log"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -24,5 +25,19 @@ func MakeCacheHandler(
 		}
 
 		return c.NoContent(http.StatusOK)
+	}
+}
+
+func Cache(
+	rankingQuery queryService.Ranking,
+	rankingRepo repository.Ranking,
+) {
+	in := &input.Cache{
+		RankingQuery: rankingQuery,
+		RankingRepo:  rankingRepo,
+	}
+
+	if err := in.Cache(); err != nil {
+		log.Printf("%+v", err)
 	}
 }

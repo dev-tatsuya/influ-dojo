@@ -19,26 +19,26 @@ func NewCron(dependency *Dependency) {
 func setScheduler(c *cron.Cron, d *Dependency) {
 	setBatchSequence(c, "0 19 * * *", func() {
 		log.Println("daily ranking batch")
-		handler.MakeRecordHandler(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo)
-		handler.MakeRankingHandler(d.DailyWorkRepo, d.DailyResultRepo)
-		handler.MakeCacheHandler(d.RankingQuery, d.RankingRepo)
-		handler.MakeTweetHandler(d.BotClient, d.DailyWorkRepo, d.DailyResultRepo)
+		handler.Record(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo)
+		handler.Ranking(d.DailyWorkRepo, d.DailyResultRepo)
+		handler.Cache(d.RankingQuery, d.RankingRepo)
+		handler.Tweet(d.BotClient, d.DailyWorkRepo, d.DailyResultRepo, "api/tweet/daily")
 	})
 
 	setBatchSequence(c, "0 20 * * 0", func() {
 		log.Println("weekly ranking batch")
-		handler.MakeRecordHandler(d.FollowerClient, d.UserRepo, d.WeeklyWorkRepo, d.WeeklyResultRepo)
-		handler.MakeRankingHandler(d.WeeklyWorkRepo, d.WeeklyResultRepo)
-		handler.MakeCacheHandler(d.RankingQuery, d.RankingRepo)
-		handler.MakeTweetHandler(d.BotClient, d.WeeklyWorkRepo, d.WeeklyResultRepo)
+		handler.Record(d.FollowerClient, d.UserRepo, d.WeeklyWorkRepo, d.WeeklyResultRepo)
+		handler.Ranking(d.WeeklyWorkRepo, d.WeeklyResultRepo)
+		handler.Cache(d.RankingQuery, d.RankingRepo)
+		handler.Tweet(d.BotClient, d.WeeklyWorkRepo, d.WeeklyResultRepo, "api/tweet/weekly")
 	})
 
 	setBatchSequence(c, "0 21 1 * *", func() {
 		log.Println("monthly ranking batch")
-		handler.MakeRecordHandler(d.FollowerClient, d.UserRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo)
-		handler.MakeRankingHandler(d.MonthlyWorkRepo, d.MonthlyResultRepo)
-		handler.MakeCacheHandler(d.RankingQuery, d.RankingRepo)
-		handler.MakeTweetHandler(d.BotClient, d.MonthlyWorkRepo, d.MonthlyResultRepo)
+		handler.Record(d.FollowerClient, d.UserRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo)
+		handler.Ranking(d.MonthlyWorkRepo, d.MonthlyResultRepo)
+		handler.Cache(d.RankingQuery, d.RankingRepo)
+		handler.Tweet(d.BotClient, d.MonthlyWorkRepo, d.MonthlyResultRepo, "api/tweet/monthly")
 	})
 }
 
