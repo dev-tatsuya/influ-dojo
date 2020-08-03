@@ -111,6 +111,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    var displayCount = 10;
+    if (widget.workRanking.rankUsers.length < displayCount) {
+      displayCount = widget.workRanking.rankUsers.length;
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -135,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(fontSize: 20),
                       ),
                     ),
-                    for (int index = 0; index <= 9; index++)
+                    for (int index = 0; index <= displayCount-1; index++)
                       buildCard(context, widget.workRanking.rankUsers[index]),
                   ],
                 ),
@@ -153,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         style: TextStyle(fontSize: 20),
                       ),
                     ),
-                    for (int index = 0; index <= 9; index++)
+                    for (int index = 0; index <= displayCount-1; index++)
                       buildCard(context, widget.resultRanking.rankUsers[index]),
                   ],
                 ),
