@@ -48,7 +48,7 @@ func (f follower) GetFollowers() ([]*model.Follower, error) {
 				UserID:       f.IdStr,
 				Name:         f.Name,
 				ScreenName:   f.ScreenName,
-				ProfileImage: f.ProfileImageURL,
+				ProfileImage: f.ProfileImageUrlHttps,
 			},
 			Work: &model.Work{
 				ScreenName:     f.ScreenName,
