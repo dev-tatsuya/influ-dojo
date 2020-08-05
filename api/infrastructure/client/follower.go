@@ -19,7 +19,7 @@ func NewFollower(accessToken, accessTokenSecret, consumerKey, consumerSecret str
 
 func (f follower) CountFollowers() (int, error) {
 	values := url.Values{}
-	values.Add("screen_name", "soldinx")
+	values.Add("screen_name", "infludojo")
 	cursor, err := f.api.GetFollowersIds(values)
 	if err != nil {
 		return 0, err
@@ -29,8 +29,8 @@ func (f follower) CountFollowers() (int, error) {
 
 func (f follower) GetFollowers() ([]*model.Follower, error) {
 	values := url.Values{}
-	values.Add("screen_name", "soldinx")
-	cursor, err := f.api.GetFriendsIds(values) //TODO フォロワーを取得すると多すぎる。クエリが膨大になる問題
+	values.Add("screen_name", "infludojo")
+	cursor, err := f.api.GetFollowersIds(values) //TODO フォロワーを取得すると多すぎる。クエリが膨大になる問題
 	if err != nil {
 		return nil, err
 	}

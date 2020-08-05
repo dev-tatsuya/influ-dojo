@@ -41,16 +41,16 @@ func setScheduler(c *cron.Cron, d *Dependency) {
 		handler.Tweet(d.BotClient, d.MonthlyWorkRepo, d.MonthlyResultRepo, "api/tweet/monthly")
 	})
 
-	//setBatchSequence(c, "0 7 * * *", func() { handler.Favorite(d.BotClient) })
-	//setBatchSequence(c, "0 12 * * *", func() { handler.Favorite(d.BotClient) })
-	//setBatchSequence(c, "0 17 * * *", func() { handler.Favorite(d.BotClient) })
-	//setBatchSequence(c, "0 18 * * *", func() { handler.Favorite(d.BotClient) })
-	//setBatchSequence(c, "0 19 * * *", func() { handler.Favorite(d.BotClient) })
-	//setBatchSequence(c, "0 20 * * *", func() { handler.Favorite(d.BotClient) })
-	//setBatchSequence(c, "0 21 * * *", func() { handler.Favorite(d.BotClient) })
-	//setBatchSequence(c, "0 22 * * *", func() { handler.Favorite(d.BotClient) })
-	//setBatchSequence(c, "0 23 * * *", func() { handler.Favorite(d.BotClient) })
-	//setBatchSequence(c, "0 24 * * *", func() { handler.Favorite(d.BotClient) })
+	setBatchSequence(c, "0 7 * * *", func() { handler.Favorite(d.BotClient) })
+	setBatchSequence(c, "0 12 * * *", func() { handler.Favorite(d.BotClient) })
+	setBatchSequence(c, "0 17 * * *", func() { handler.Favorite(d.BotClient) })
+	setBatchSequence(c, "0 18 * * *", func() { handler.Favorite(d.BotClient) })
+	setBatchSequence(c, "0 19 * * *", func() { handler.Favorite(d.BotClient) })
+	setBatchSequence(c, "0 20 * * *", func() { handler.Favorite(d.BotClient) })
+	setBatchSequence(c, "0 21 * * *", func() { handler.Favorite(d.BotClient) })
+	setBatchSequence(c, "0 22 * * *", func() { handler.Favorite(d.BotClient) })
+	setBatchSequence(c, "0 23 * * *", func() { handler.Favorite(d.BotClient) })
+	setBatchSequence(c, "0 0 * * *", func() { handler.Favorite(d.BotClient) })
 }
 
 func setBatchSequence(c *cron.Cron, spec string, f func()) {

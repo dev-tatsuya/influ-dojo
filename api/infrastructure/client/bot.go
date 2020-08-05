@@ -31,6 +31,44 @@ func NewBot(accessToken, accessTokenSecret, consumerKey, consumerSecret string) 
 }
 
 func (b *bot) Tweet(works []*model.Work, results []*model.Result, pathStr string) error {
+	workPoint1 := 0
+	workPoint2 := 0
+	workPoint3 := 0
+	workName1 := ""
+	workName2 := ""
+	workName3 := ""
+	resultPoint1 := 0
+	resultPoint2 := 0
+	resultPoint3 := 0
+	resultName1 := ""
+	resultName2 := ""
+	resultName3 := ""
+
+	if len(works) >= 1 {
+		workPoint1 = works[0].Point
+		workName1 = works[0].ScreenName
+	}
+	if len(results) >= 1 {
+		resultPoint1 = results[0].Point
+		resultName1 = results[0].ScreenName
+	}
+	if len(works) >= 2 {
+		workPoint2 = works[1].Point
+		workName2 = works[1].ScreenName
+	}
+	if len(results) >= 2 {
+		resultPoint2 = results[1].Point
+		resultName2 = results[1].ScreenName
+	}
+	if len(works) >= 3 {
+		workPoint3 = works[2].Point
+		workName3 = works[2].ScreenName
+	}
+	if len(results) >= 3 {
+		resultPoint3 = results[2].Point
+		resultName3 = results[2].ScreenName
+	}
+
 	body := fmt.Sprintf(`
 【%s速報 %v】
 
@@ -45,13 +83,14 @@ func (b *bot) Tweet(works []*model.Work, results []*model.Result, pathStr string
 🥉 %dpt @%s
 
 ▼ 4位以下はコチラ ▼
-example.com
+https://influ-dojo.work
 `,
 		period[path.Base(pathStr)], time.Now().Format("1/2 15:04"),
-		works[0].Point, works[0].ScreenName, works[1].Point, works[1].ScreenName, works[2].Point, works[2].ScreenName,
-		results[0].Point, results[0].ScreenName, results[1].Point, results[1].ScreenName, results[2].Point, results[2].ScreenName,
+		workPoint1, workName1, workPoint2, workName2, workPoint3, workName3,
+		resultPoint1, resultName1, resultPoint2, resultName2, resultPoint3, resultName3,
 	)
 
+	fmt.Printf("body: %+v", body)
 	if _, err := b.api.PostTweet(body, nil); err != nil {
 		return err
 	}

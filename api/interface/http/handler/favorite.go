@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"influ-dojo/api/domain/client"
 	"influ-dojo/api/usecase/input"
 	"log"
@@ -27,4 +28,6 @@ func Favorite(bot client.Bot) {
 	if err := in.Favorite(); err != nil {
 		log.Printf("%+v", err)
 	}
+
+	fmt.Println("favorite done")
 }
