@@ -7,6 +7,7 @@ import (
 	dataModel "influ-dojo/api/infrastructure/persistence/model"
 
 	"github.com/jinzhu/gorm"
+	"golang.org/x/xerrors"
 )
 
 type user struct {
@@ -51,6 +52,24 @@ func (repo *user) LoadByScreenName(screenName string) (*domainModel.User, error)
 		ScreenName:   mdl.ScreenName,
 		ProfileImage: mdl.ProfileImage,
 	}, nil
+}
+
+func (repo *user) LoadIDs() ([]string, error) {
+	mdls := make([]*dataModel.User, 0)
+	if err := repo.DB.Find(&mdls).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return []string{}, nil
+		}
+
+		return nil, xerrors.Errorf("failed to load ids: %w", err)
+	}
+
+	IDs := make([]string, 0)
+	for _, mdl := range mdls {
+		IDs = append(IDs, mdl.UserID)
+	}
+
+	return IDs, nil
 }
 
 func (repo *user) Save(entity *domainModel.User) error {

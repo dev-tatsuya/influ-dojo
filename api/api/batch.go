@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"influ-dojo/api/interface/http/handler"
 	"log"
 	"time"
@@ -17,8 +18,16 @@ func NewCron(dependency *Dependency) {
 }
 
 func setScheduler(c *cron.Cron, d *Dependency) {
+	setBatchSequence(c, "@every 30m", func() {
+		fmt.Println("register new users")
+		handler.RecordNewUsers(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo,
+			d.WeeklyWorkRepo, d.WeeklyResultRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo)
+	})
+
 	setBatchSequence(c, "0 19 * * *", func() {
-		log.Println("daily ranking batch")
+		fmt.Println("daily ranking batch")
+		handler.RecordNewUsers(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo,
+			d.WeeklyWorkRepo, d.WeeklyResultRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo)
 		handler.Record(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo)
 		handler.Ranking(d.DailyWorkRepo, d.DailyResultRepo)
 		handler.Cache(d.RankingQuery, d.RankingRepo)
@@ -26,7 +35,9 @@ func setScheduler(c *cron.Cron, d *Dependency) {
 	})
 
 	setBatchSequence(c, "0 20 * * 0", func() {
-		log.Println("weekly ranking batch")
+		fmt.Println("weekly ranking batch")
+		handler.RecordNewUsers(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo,
+			d.WeeklyWorkRepo, d.WeeklyResultRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo)
 		handler.Record(d.FollowerClient, d.UserRepo, d.WeeklyWorkRepo, d.WeeklyResultRepo)
 		handler.Ranking(d.WeeklyWorkRepo, d.WeeklyResultRepo)
 		handler.Cache(d.RankingQuery, d.RankingRepo)
@@ -34,7 +45,9 @@ func setScheduler(c *cron.Cron, d *Dependency) {
 	})
 
 	setBatchSequence(c, "0 21 1 * *", func() {
-		log.Println("monthly ranking batch")
+		fmt.Println("monthly ranking batch")
+		handler.RecordNewUsers(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo,
+			d.WeeklyWorkRepo, d.WeeklyResultRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo)
 		handler.Record(d.FollowerClient, d.UserRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo)
 		handler.Ranking(d.MonthlyWorkRepo, d.MonthlyResultRepo)
 		handler.Cache(d.RankingQuery, d.RankingRepo)

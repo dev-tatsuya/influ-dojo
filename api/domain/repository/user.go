@@ -7,5 +7,6 @@ import "influ-dojo/api/domain/model"
 type User interface {
 	LoadByID(userID string) (*model.User, error)
 	LoadByScreenName(screenName string) (*model.User, error)
+	LoadIDs() ([]string, error)
 	Save(user *model.User) error
 }

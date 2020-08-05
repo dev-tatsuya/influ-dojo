@@ -1,7 +1,6 @@
 package input
 
 import (
-	"influ-dojo/api/domain/apperr"
 	domainClient "influ-dojo/api/domain/client"
 	"influ-dojo/api/domain/repository"
 )
@@ -20,41 +19,14 @@ func (in *Record) Record() error {
 	}
 
 	for _, f := range followers {
+		//TODO フォロワーの数だけDB接続してしまう。+QueryServiceでまとめて取得したい
 		user, err := in.UserRepo.LoadByID(f.User.UserID)
 		if err != nil {
-			if err == apperr.ErrRecordNotFound {
-				if err := in.UserRepo.Save(f.User); err != nil {
-					return err
-				}
-
-				if err := in.WorkRepo.Save(f.Work); err != nil {
-					return err
-				}
-
-				if err := in.ResultRepo.Save(f.Result); err != nil {
-					return err
-				}
-
-				continue
-			}
-
 			return err
 		}
 
 		work, err := in.WorkRepo.LoadByScreenName(user.ScreenName)
 		if err != nil {
-			if err == apperr.ErrRecordNotFound {
-				if err := in.WorkRepo.Save(f.Work); err != nil {
-					return err
-				}
-
-				if err := in.ResultRepo.Save(f.Result); err != nil {
-					return err
-				}
-
-				continue
-			}
-
 			return err
 		}
 
