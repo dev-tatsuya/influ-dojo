@@ -24,6 +24,18 @@ func (f follower) CountFollowers() (int, error) {
 	if err != nil {
 		return 0, err
 	}
+
+	values = url.Values{}
+	values.Add("count", "0")
+	sr, err := f.api.GetSearch("from:@soldinx", values)
+	if err != nil {
+		return 0, err
+	}
+	for i, status := range sr.Statuses {
+		fmt.Printf("tweets[%d]: %+v, textCount=%d, replyName=%s, isQuote=%v\n",
+			i, status.Text, len(status.Text), status.InReplyToScreenName, status.RetweetedStatus != nil)
+	}
+
 	return len(cursor.Ids), nil
 }
 

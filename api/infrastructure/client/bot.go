@@ -31,9 +31,9 @@ func NewBot(accessToken, accessTokenSecret, consumerKey, consumerSecret string) 
 }
 
 func (b *bot) Tweet(works []*model.Work, results []*model.Result, pathStr string) error {
-	workPoint1 := 0
-	workPoint2 := 0
-	workPoint3 := 0
+	workPoint1 := 0.0
+	workPoint2 := 0.0
+	workPoint3 := 0.0
 	workName1 := ""
 	workName2 := ""
 	workName3 := ""

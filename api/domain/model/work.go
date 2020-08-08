@@ -1,6 +1,9 @@
 package model
 
-import "influ-dojo/api/domain/utils"
+import (
+	"influ-dojo/api/domain/utils"
+	"math"
+)
 
 type Work struct {
 	ScreenName             string
@@ -10,7 +13,7 @@ type Work struct {
 	RepliesCount           int
 	FavoritesCount         int
 	IncreaseFavoritesCount int
-	Point                  int
+	Point                  float64
 	Ranking                int
 	LastRanking            int
 }
@@ -22,12 +25,31 @@ func (work *Work) MakeRankingPast() {
 func (work *Work) UpdateCount(latestTweetsCount, latestFavoritesCount int) {
 	work.IncreaseTweetsCount = utils.Sub(latestTweetsCount, work.TweetsCount)
 	work.IncreaseFavoritesCount = utils.Sub(latestFavoritesCount, work.FavoritesCount)
-	//work.setPoint()
 	work.TweetsCount = latestTweetsCount
 	work.FavoritesCount = latestFavoritesCount
 }
 
-//TODO rankingでやる
-func (work *Work) setPoint() {
-	work.Point = work.IncreaseTweetsCount*200 + work.IncreaseFavoritesCount
+func (work *Work) SetPoint() {
+	myTweetsCount := work.MyTweetsCount
+	if myTweetsCount >= 5 {
+		myTweetsCount = 5
+	}
+
+	repliesCount := work.RepliesCount
+	if repliesCount >= 10 {
+		repliesCount = 10
+	}
+
+	favesCount := work.IncreaseFavoritesCount
+	if favesCount >= 500 {
+		favesCount = 500
+	}
+
+	tweetRate := (1.0 / 25.0) * math.Pow(float64(myTweetsCount), 2)
+	replyRate := (1.0 / 100.0) * math.Pow(float64(repliesCount), 2)
+	favesRate := (1.0 / 250000.0) * math.Pow(float64(favesCount), 2)
+
+	totalPoint := 40*tweetRate + 30*replyRate + 30*favesRate
+
+	work.Point = math.Round(totalPoint*100) / 100
 }

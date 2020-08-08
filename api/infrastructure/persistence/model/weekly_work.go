@@ -10,7 +10,7 @@ type WeeklyWork struct {
 	RepliesCount           *int
 	FavoritesCount         int
 	IncreaseFavoritesCount *int
-	Point                  *int
+	Point                  *float64
 	Ranking                int
 	LastRanking            int
 	Model
@@ -38,8 +38,9 @@ func (mdl *WeeklyWork) MakeEntity() *model.Work {
 	if mdl.IncreaseFavoritesCount == nil {
 		mdl.IncreaseFavoritesCount = &zero
 	}
+	zeroZero := 0.0
 	if mdl.Point == nil {
-		mdl.Point = &zero
+		mdl.Point = &zeroZero
 	}
 
 	return &model.Work{
