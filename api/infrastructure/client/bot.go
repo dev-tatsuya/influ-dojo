@@ -73,9 +73,9 @@ func (b *bot) Tweet(works []*model.Work, results []*model.Result, pathStr string
 【%s速報 %v】
 
 ［作業ランキング］
-🥇 %dpt @%s
-🥈 %dpt @%s
-🥉 %dpt @%s
+🥇 %gpt @%s
+🥈 %gpt @%s
+🥉 %gpt @%s
 
 ［成果ランキング］
 🥇 %dpt @%s
