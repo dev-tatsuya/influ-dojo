@@ -20,7 +20,7 @@ func (in *ClassifyTweets) Classify() error {
 	}
 
 	for _, work := range works {
-		if work.IncreaseTweetsCount == 0 {
+		if work.IncreaseTweetsCount <= 0 {
 			continue
 		}
 

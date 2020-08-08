@@ -10,7 +10,7 @@ class RankUser {
   String name;
   String screenName;
   String profileImage;
-  double point;
+  num point;
   int ranking;
   int lastRanking;
 

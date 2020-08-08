@@ -11,7 +11,7 @@ RankUser _$RankUserFromJson(Map<String, dynamic> json) {
     json['name'] as String,
     json['screen_name'] as String,
     json['profile_image'] as String,
-    json['point'] as double,
+    json['point'] as num,
     json['ranking'] as int,
     json['last_ranking'] as int,
   );
