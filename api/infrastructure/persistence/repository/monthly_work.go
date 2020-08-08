@@ -18,6 +18,10 @@ func NewMonthlyWork(db *gorm.DB) repository.Work {
 	return &monthlyWork{GormRepository{db}}
 }
 
+func (repo *monthlyWork) Load() ([]*domainModel.Work, error) {
+	panic("implement me")
+}
+
 func (repo *monthlyWork) LoadOrderByRanking() ([]*domainModel.Work, error) {
 	mdls := make([]*dataModel.MonthlyWork, 0)
 	if err := repo.DB.Order("point desc").Find(&mdls).Error; err != nil {
@@ -60,16 +64,7 @@ func (repo *monthlyWork) LoadByScreenName(screenName string) (*domainModel.Work,
 }
 
 func (repo *monthlyWork) Save(entity *domainModel.Work) error {
-	mdl := &dataModel.MonthlyWork{
-		ScreenName:             entity.ScreenName,
-		TweetsCount:            entity.TweetsCount,
-		IncreaseTweetsCount:    &entity.IncreaseTweetsCount,
-		FavoritesCount:         entity.FavoritesCount,
-		IncreaseFavoritesCount: &entity.IncreaseFavoritesCount,
-		Point:                  &entity.Point,
-		Ranking:                entity.Ranking,
-		LastRanking:            entity.LastRanking,
-	}
+	mdl := dataModel.NewMonthlyWork(entity)
 
 	return repo.store(repo.DB, mdl)
 }

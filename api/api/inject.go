@@ -15,6 +15,7 @@ import (
 type Dependency struct {
 	FollowerClient    domainClient.Follower
 	BotClient         domainClient.Bot
+	TweetClient       domainClient.Tweet
 	UserRepo          repository.User
 	DailyWorkRepo     repository.Work
 	DailyResultRepo   repository.Result
@@ -35,6 +36,7 @@ func Inject(cfg *Config, db *gorm.DB, rd *redis.Client) (*Dependency, error) {
 	return &Dependency{
 		FollowerClient:    infraClient.NewFollower(at, ats, ck, cs),
 		BotClient:         infraClient.NewBot(at, ats, ck, cs),
+		TweetClient:       infraClient.NewTweet(at, ats, ck, cs),
 		UserRepo:          persistence.NewUser(db),
 		DailyWorkRepo:     persistence.NewDailyWork(db),
 		DailyResultRepo:   persistence.NewDailyResult(db),

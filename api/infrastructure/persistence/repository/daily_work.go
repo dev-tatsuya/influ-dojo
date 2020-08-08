@@ -18,6 +18,20 @@ func NewDailyWork(db *gorm.DB) repository.Work {
 	return &dailyWork{GormRepository{db}}
 }
 
+func (repo *dailyWork) Load() ([]*domainModel.Work, error) {
+	mdls := make([]*dataModel.DailyWork, 0)
+	if err := repo.DB.Find(&mdls).Error; err != nil {
+		return nil, xerrors.Errorf("failed to load daily works: %w", err)
+	}
+
+	entities := make([]*domainModel.Work, 0)
+	for _, mdl := range mdls {
+		entities = append(entities, mdl.MakeEntity())
+	}
+
+	return entities, nil
+}
+
 func (repo *dailyWork) LoadOrderByRanking() ([]*domainModel.Work, error) {
 	mdls := make([]*dataModel.DailyWork, 0)
 	if err := repo.DB.Order("point desc").Find(&mdls).Error; err != nil {
@@ -60,16 +74,7 @@ func (repo *dailyWork) LoadByScreenName(screenName string) (*domainModel.Work, e
 }
 
 func (repo *dailyWork) Save(entity *domainModel.Work) error {
-	mdl := &dataModel.DailyWork{
-		ScreenName:             entity.ScreenName,
-		TweetsCount:            entity.TweetsCount,
-		IncreaseTweetsCount:    &entity.IncreaseTweetsCount,
-		FavoritesCount:         entity.FavoritesCount,
-		IncreaseFavoritesCount: &entity.IncreaseFavoritesCount,
-		Point:                  &entity.Point,
-		Ranking:                entity.Ranking,
-		LastRanking:            entity.LastRanking,
-	}
+	mdl := dataModel.NewDailyWork(entity)
 
 	return repo.store(repo.DB, mdl)
 }
