@@ -77,9 +77,9 @@ class _TabPageState extends State<TabPage> {
             if (snapshot.hasData) {
               return TabBarViewBuilder(snapshot.data);
             } else if (snapshot.hasError) {
-              return Text("エラーが発生しました。お問い合わせ下さい。");
+              return Center(child: Text("エラーが発生しました。お問い合わせ下さい。\n${snapshot.error}"));
             }
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           },
         ),
       ),
