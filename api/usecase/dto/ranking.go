@@ -14,10 +14,10 @@ type Ranking struct {
 }
 
 type RankUser struct {
-	Name         string `json:"name"`
-	ScreenName   string `json:"screen_name"`
-	ProfileImage string `json:"profile_image"`
-	Point        int    `json:"point"`
-	Ranking      int    `json:"ranking"`
-	LastRanking  int    `json:"last_ranking"`
+	Name         string  `json:"name"`
+	ScreenName   string  `json:"screen_name"`
+	ProfileImage string  `json:"profile_image"`
+	Point        float64 `json:"point"`
+	Ranking      int     `json:"ranking"`
+	LastRanking  int     `json:"last_ranking"`
 }
