@@ -19,7 +19,17 @@ func NewMonthlyWork(db *gorm.DB) repository.Work {
 }
 
 func (repo *monthlyWork) Load() ([]*domainModel.Work, error) {
-	panic("implement me")
+	mdls := make([]*dataModel.MonthlyWork, 0)
+	if err := repo.DB.Find(&mdls).Error; err != nil {
+		return nil, xerrors.Errorf("failed to load daily works: %w", err)
+	}
+
+	entities := make([]*domainModel.Work, 0)
+	for _, mdl := range mdls {
+		entities = append(entities, mdl.MakeEntity())
+	}
+
+	return entities, nil
 }
 
 func (repo *monthlyWork) LoadOrderByRanking() ([]*domainModel.Work, error) {

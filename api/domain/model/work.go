@@ -53,3 +53,8 @@ func (work *Work) SetPoint() {
 
 	work.Point = math.Round(totalPoint*100) / 100
 }
+
+func (work *Work) ResetTweetsCount() {
+	work.MyTweetsCount = 0
+	work.RepliesCount = 0
+}

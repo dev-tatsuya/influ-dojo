@@ -45,6 +45,7 @@ func setScheduler(c *cron.Cron, d *Dependency) {
 		handler.Ranking(d.WeeklyWorkRepo, d.WeeklyResultRepo)
 		handler.Cache(d.RankingQuery, d.RankingRepo)
 		handler.Tweet(d.BotClient, d.WeeklyWorkRepo, d.WeeklyResultRepo, "api/tweet/weekly")
+		handler.ResetTweetsCount(d.WeeklyWorkRepo)
 	})
 
 	setBatchSequence(c, "0 21 1 * *", func() {
@@ -56,6 +57,7 @@ func setScheduler(c *cron.Cron, d *Dependency) {
 		handler.Ranking(d.MonthlyWorkRepo, d.MonthlyResultRepo)
 		handler.Cache(d.RankingQuery, d.RankingRepo)
 		handler.Tweet(d.BotClient, d.MonthlyWorkRepo, d.MonthlyResultRepo, "api/tweet/monthly")
+		handler.ResetTweetsCount(d.MonthlyWorkRepo)
 	})
 
 	setBatchSequence(c, "0 7 * * *", func() { handler.Favorite(d.BotClient) })

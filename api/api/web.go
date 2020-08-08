@@ -28,6 +28,8 @@ func setRouting(d *Dependency, e *echo.Echo) {
 	webAPI.POST("/favorite", handler.MakeFavoriteHandler(d.BotClient))
 	webAPI.POST("/classify/tweets", handler.MakeClassifyTweetsHandler(d.TweetClient, d.DailyWorkRepo, d.WeeklyWorkRepo, d.MonthlyWorkRepo))
 	webAPI.POST("/calc/point", handler.MakeCalcPointHandler(d.DailyWorkRepo))
+	webAPI.POST("/reset/tweets/weekly", handler.MakeResetTweetsHandler(d.WeeklyWorkRepo))
+	webAPI.POST("/reset/tweets/monthly", handler.MakeResetTweetsHandler(d.MonthlyWorkRepo))
 
 	ranking := webAPI.Group("/ranking")
 	ranking.POST("/daily", handler.MakeRankingHandler(d.DailyWorkRepo, d.DailyResultRepo))
