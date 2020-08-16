@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"influ-dojo/api/domain/client"
 	"influ-dojo/api/domain/model"
+	"influ-dojo/api/domain/utils"
 	"net/url"
+
+	"github.com/ChimeraCoder/anaconda"
 )
 
 type follower struct {
@@ -42,19 +45,25 @@ func (f follower) CountFollowers() (int, error) {
 func (f follower) GetFollowers() ([]*model.Follower, error) {
 	values := url.Values{}
 	values.Add("screen_name", "infludojo")
-	cursor, err := f.api.GetFollowersIds(values) //TODO フォロワーを取得すると多すぎる。クエリが膨大になる問題
+	cursor, err := f.api.GetFollowersIds(values)
 	if err != nil {
 		return nil, err
 	}
 
-	users, err := f.api.GetUsersLookupByIds(cursor.Ids, nil)
-	if err != nil {
-		return nil, err
+	totalUsers := make([]anaconda.User, 0)
+	for index := range utils.IndexChunks(len(cursor.Ids), 100) {
+		users, err := f.api.GetUsersLookupByIds(cursor.Ids[index.From:index.To], nil)
+		if err != nil {
+			return nil, err
+		}
+
+		totalUsers = append(totalUsers, users...)
 	}
-	fmt.Println("followers count:", len(users))
+
+	fmt.Println("followers count:", len(totalUsers))
 
 	followers := make([]*model.Follower, 0)
-	for _, f := range users {
+	for _, f := range totalUsers {
 		f := &model.Follower{
 			User: &model.User{
 				UserID:       f.IdStr,
