@@ -82,3 +82,46 @@ func (repo *user) Save(entity *domainModel.User) error {
 
 	return repo.store(repo.DB, mdl)
 }
+
+func (repo *user) Delete(userID string) error {
+	user, err := repo.LoadByID(userID)
+	if err != nil {
+		return err
+	}
+
+	return transaction(repo.DB, func(tx *gorm.DB) error {
+		if err := tx.Delete(&dataModel.User{}, "user_id = ?", userID).Error; err != nil {
+			return xerrors.Errorf("failed to delete user_id = %s: %w", userID, err)
+		}
+
+		if err := tx.Delete(&dataModel.DailyWork{}, "screen_name = ?", user.ScreenName).Error; err != nil {
+			return xerrors.Errorf("failed to delete daily work for screen_name = %s: %w", user.ScreenName, err)
+		}
+
+		if err := tx.Delete(&dataModel.DailyResult{}, "screen_name = ?", user.ScreenName).Error; err != nil {
+			return xerrors.Errorf("failed to delete daily result for screen_name = %s: %w", user.ScreenName, err)
+		}
+
+		if err := tx.Delete(&dataModel.WeeklyWork{}, "screen_name = ?", user.ScreenName).Error; err != nil {
+			return xerrors.Errorf("failed to delete weekly work for screen_name = %s: %w", user.ScreenName, err)
+		}
+
+		if err := tx.Delete(&dataModel.WeeklyResult{}, "screen_name = ?", user.ScreenName).Error; err != nil {
+			return xerrors.Errorf("failed to delete weekly result for screen_name = %s: %w", user.ScreenName, err)
+		}
+
+		if err := tx.Delete(&dataModel.MonthlyWork{}, "screen_name = ?", user.ScreenName).Error; err != nil {
+			return xerrors.Errorf("failed to delete monthly work for screen_name = %s: %w", user.ScreenName, err)
+		}
+
+		if err := tx.Delete(&dataModel.MonthlyResult{}, "screen_name = ?", user.ScreenName).Error; err != nil {
+			return xerrors.Errorf("failed to delete monthly result for screen_name = %s: %w", user.ScreenName, err)
+		}
+
+		if err := tx.Commit().Error; err != nil {
+			return xerrors.Errorf("failed to commit delete user = %s: %w", user.ScreenName, err)
+		}
+
+		return nil
+	})
+}

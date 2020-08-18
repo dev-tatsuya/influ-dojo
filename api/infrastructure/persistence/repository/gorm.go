@@ -2,6 +2,7 @@ package repository
 
 import (
 	"influ-dojo/api/infrastructure/persistence/model"
+	"log"
 
 	"github.com/jinzhu/gorm"
 	"golang.org/x/xerrors"
@@ -27,4 +28,28 @@ func (repo *GormRepository) store(db *gorm.DB, mdl model.GormModel) error {
 	}
 
 	return nil
+}
+
+func transaction(db *gorm.DB, f func(tx *gorm.DB) error) error {
+	tx := db.Begin()
+	if err := tx.Error; err != nil {
+		return xerrors.Errorf("failed to begin transaction: %w", err)
+	}
+
+	defer func() {
+		rollback(tx)
+
+		if r := recover(); r != nil {
+			panic(r)
+		}
+	}()
+
+	return f(tx)
+}
+
+func rollback(tx *gorm.DB) {
+	if err := tx.Rollback().Error; err != nil {
+		log.Printf("failed to rollback transaction: %v", err)
+		return
+	}
 }

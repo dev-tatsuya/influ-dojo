@@ -3,6 +3,7 @@ package input
 import (
 	domainClient "influ-dojo/api/domain/client"
 	"influ-dojo/api/domain/repository"
+	"log"
 )
 
 type RecordUsers struct {
@@ -29,7 +30,7 @@ func (in *RecordUsers) RecordUsers() error {
 
 	for _, f := range latestFollowers {
 		if contains(IDs, f.UserID) {
-			//TODO containsならIDsから削除していき、最後に残ったIDは非フォロワーなので論理削除したい
+			IDs = remove(IDs, f.UserID)
 			continue
 		}
 
@@ -62,6 +63,13 @@ func (in *RecordUsers) RecordUsers() error {
 		}
 	}
 
+	log.Printf("削除対象IDs: %v", IDs)
+	for _, userID := range IDs {
+		if err := in.UserRepo.Delete(userID); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -72,4 +80,15 @@ func contains(slice []string, object string) bool {
 		}
 	}
 	return false
+}
+
+func remove(elements []string, search string) []string {
+	var result []string
+	for _, element := range elements {
+		if element != search {
+			result = append(result, element)
+		}
+	}
+
+	return result
 }

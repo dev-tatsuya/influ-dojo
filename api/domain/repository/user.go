@@ -9,4 +9,5 @@ type User interface {
 	LoadByScreenName(screenName string) (*model.User, error)
 	LoadIDs() ([]string, error)
 	Save(user *model.User) error
+	Delete(userID string) error
 }
