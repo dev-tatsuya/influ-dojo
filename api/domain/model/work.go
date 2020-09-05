@@ -29,25 +29,25 @@ func (work *Work) UpdateCount(latestTweetsCount, latestFavoritesCount int) {
 	work.FavoritesCount = latestFavoritesCount
 }
 
-func (work *Work) SetPoint() {
+func (work *Work) CalcPoint(tweetBase, repBase, FavBase float64) {
 	myTweetsCount := work.MyTweetsCount
-	if myTweetsCount >= 5 {
-		myTweetsCount = 5
+	if myTweetsCount >= int(tweetBase) {
+		myTweetsCount = int(tweetBase)
 	}
 
 	repliesCount := work.RepliesCount
-	if repliesCount >= 10 {
-		repliesCount = 10
+	if repliesCount >= int(repBase) {
+		repliesCount = int(repBase)
 	}
 
 	favesCount := work.IncreaseFavoritesCount
-	if favesCount >= 500 {
-		favesCount = 500
+	if favesCount >= int(FavBase) {
+		favesCount = int(FavBase)
 	}
 
-	tweetRate := (1.0 / 25.0) * math.Pow(float64(myTweetsCount), 2)
-	replyRate := (1.0 / 100.0) * math.Pow(float64(repliesCount), 2)
-	favesRate := (1.0 / 250000.0) * math.Pow(float64(favesCount), 2)
+	tweetRate := (1.0 / tweetBase * tweetBase) * math.Pow(float64(myTweetsCount), 2)
+	replyRate := (1.0 / repBase * repBase) * math.Pow(float64(repliesCount), 2)
+	favesRate := (1.0 / FavBase * FavBase) * math.Pow(float64(favesCount), 2)
 
 	totalPoint := 40*tweetRate + 30*replyRate + 30*favesRate
 

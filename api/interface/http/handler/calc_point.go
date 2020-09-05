@@ -5,6 +5,7 @@ import (
 	"influ-dojo/api/usecase/input"
 	"log"
 	"net/http"
+	"path"
 
 	"github.com/labstack/echo/v4"
 )
@@ -14,6 +15,7 @@ func MakeCalcPointHandler(
 ) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		in := &input.CalcPoint{
+			Path:     path.Base(c.Path()),
 			WorkRepo: work,
 		}
 
@@ -27,8 +29,10 @@ func MakeCalcPointHandler(
 
 func CalcPoint(
 	work repository.Work,
+	path string,
 ) {
 	in := &input.CalcPoint{
+		Path:     path,
 		WorkRepo: work,
 	}
 

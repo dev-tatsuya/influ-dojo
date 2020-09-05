@@ -30,7 +30,7 @@ func setScheduler(c *cron.Cron, d *Dependency) {
 			d.WeeklyWorkRepo, d.WeeklyResultRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo)
 		handler.Record(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo)
 		handler.ClassifyDailyTweets(d.TweetClient, d.DailyWorkRepo, d.WeeklyWorkRepo, d.MonthlyWorkRepo)
-		handler.CalcPoint(d.DailyWorkRepo)
+		handler.CalcPoint(d.DailyWorkRepo, "daily")
 		handler.Ranking(d.DailyWorkRepo, d.DailyResultRepo)
 		handler.Cache(d.RankingQuery, d.RankingRepo)
 		handler.Tweet(d.BotClient, d.DailyWorkRepo, d.DailyResultRepo, "api/tweet/daily")
@@ -41,7 +41,7 @@ func setScheduler(c *cron.Cron, d *Dependency) {
 		handler.RecordNewUsers(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo,
 			d.WeeklyWorkRepo, d.WeeklyResultRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo)
 		handler.Record(d.FollowerClient, d.UserRepo, d.WeeklyWorkRepo, d.WeeklyResultRepo)
-		handler.CalcPoint(d.WeeklyWorkRepo)
+		handler.CalcPoint(d.WeeklyWorkRepo, "weekly")
 		handler.Ranking(d.WeeklyWorkRepo, d.WeeklyResultRepo)
 		handler.Cache(d.RankingQuery, d.RankingRepo)
 		handler.Tweet(d.BotClient, d.WeeklyWorkRepo, d.WeeklyResultRepo, "api/tweet/weekly")
@@ -53,7 +53,7 @@ func setScheduler(c *cron.Cron, d *Dependency) {
 		handler.RecordNewUsers(d.FollowerClient, d.UserRepo, d.DailyWorkRepo, d.DailyResultRepo,
 			d.WeeklyWorkRepo, d.WeeklyResultRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo)
 		handler.Record(d.FollowerClient, d.UserRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo)
-		handler.CalcPoint(d.MonthlyWorkRepo)
+		handler.CalcPoint(d.MonthlyWorkRepo, "monthly")
 		handler.Ranking(d.MonthlyWorkRepo, d.MonthlyResultRepo)
 		handler.Cache(d.RankingQuery, d.RankingRepo)
 		handler.Tweet(d.BotClient, d.MonthlyWorkRepo, d.MonthlyResultRepo, "api/tweet/monthly")

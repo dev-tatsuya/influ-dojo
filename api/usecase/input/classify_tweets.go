@@ -78,8 +78,17 @@ func addTweetsCount(repo repository.Work, screenName string, myTweetCount, repli
 		return err
 	}
 
-	entity.MyTweetsCount += myTweetCount
-	entity.RepliesCount += repliesCount
+	if myTweetCount > 5 {
+		entity.MyTweetsCount += 5
+	} else {
+		entity.MyTweetsCount += myTweetCount
+	}
+
+	if repliesCount > 10 {
+		entity.RepliesCount += 10
+	} else {
+		entity.RepliesCount += repliesCount
+	}
 
 	return repo.Save(entity)
 }

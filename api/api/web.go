@@ -27,7 +27,9 @@ func setRouting(d *Dependency, e *echo.Echo) {
 	webAPI.GET("/participant", handler.MakeParticipantHandler(d.UserRepo))
 	webAPI.POST("/favorite", handler.MakeFavoriteHandler(d.BotClient))
 	webAPI.POST("/classify/tweets", handler.MakeClassifyTweetsHandler(d.TweetClient, d.DailyWorkRepo, d.WeeklyWorkRepo, d.MonthlyWorkRepo))
-	webAPI.POST("/calc/point", handler.MakeCalcPointHandler(d.DailyWorkRepo))
+	webAPI.POST("/calc/point/daily", handler.MakeCalcPointHandler(d.DailyWorkRepo))
+	webAPI.POST("/calc/point/weekly", handler.MakeCalcPointHandler(d.WeeklyWorkRepo))
+	webAPI.POST("/calc/point/monthly", handler.MakeCalcPointHandler(d.MonthlyWorkRepo))
 	webAPI.POST("/reset/tweets/weekly", handler.MakeResetTweetsHandler(d.WeeklyWorkRepo))
 	webAPI.POST("/reset/tweets/monthly", handler.MakeResetTweetsHandler(d.MonthlyWorkRepo))
 
