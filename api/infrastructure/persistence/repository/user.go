@@ -90,31 +90,31 @@ func (repo *user) Delete(userID string) error {
 	}
 
 	return transaction(repo.DB, func(tx *gorm.DB) error {
-		if err := tx.Delete(&dataModel.User{}, "user_id = ?", userID).Error; err != nil {
+		if err := tx.Unscoped().Delete(&dataModel.User{}, "user_id = ?", userID).Error; err != nil {
 			return xerrors.Errorf("failed to delete user_id = %s: %w", userID, err)
 		}
 
-		if err := tx.Delete(&dataModel.DailyWork{}, "screen_name = ?", user.ScreenName).Error; err != nil {
+		if err := tx.Unscoped().Delete(&dataModel.DailyWork{}, "screen_name = ?", user.ScreenName).Error; err != nil {
 			return xerrors.Errorf("failed to delete daily work for screen_name = %s: %w", user.ScreenName, err)
 		}
 
-		if err := tx.Delete(&dataModel.DailyResult{}, "screen_name = ?", user.ScreenName).Error; err != nil {
+		if err := tx.Unscoped().Delete(&dataModel.DailyResult{}, "screen_name = ?", user.ScreenName).Error; err != nil {
 			return xerrors.Errorf("failed to delete daily result for screen_name = %s: %w", user.ScreenName, err)
 		}
 
-		if err := tx.Delete(&dataModel.WeeklyWork{}, "screen_name = ?", user.ScreenName).Error; err != nil {
+		if err := tx.Unscoped().Delete(&dataModel.WeeklyWork{}, "screen_name = ?", user.ScreenName).Error; err != nil {
 			return xerrors.Errorf("failed to delete weekly work for screen_name = %s: %w", user.ScreenName, err)
 		}
 
-		if err := tx.Delete(&dataModel.WeeklyResult{}, "screen_name = ?", user.ScreenName).Error; err != nil {
+		if err := tx.Unscoped().Delete(&dataModel.WeeklyResult{}, "screen_name = ?", user.ScreenName).Error; err != nil {
 			return xerrors.Errorf("failed to delete weekly result for screen_name = %s: %w", user.ScreenName, err)
 		}
 
-		if err := tx.Delete(&dataModel.MonthlyWork{}, "screen_name = ?", user.ScreenName).Error; err != nil {
+		if err := tx.Unscoped().Delete(&dataModel.MonthlyWork{}, "screen_name = ?", user.ScreenName).Error; err != nil {
 			return xerrors.Errorf("failed to delete monthly work for screen_name = %s: %w", user.ScreenName, err)
 		}
 
-		if err := tx.Delete(&dataModel.MonthlyResult{}, "screen_name = ?", user.ScreenName).Error; err != nil {
+		if err := tx.Unscoped().Delete(&dataModel.MonthlyResult{}, "screen_name = ?", user.ScreenName).Error; err != nil {
 			return xerrors.Errorf("failed to delete monthly result for screen_name = %s: %w", user.ScreenName, err)
 		}
 

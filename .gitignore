@@ -2,3 +2,4 @@
 
 /api/config.yml
 dump.rdb
+/docker/mysql/data

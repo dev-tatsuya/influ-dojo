@@ -26,6 +26,7 @@ services:
       - TZ=Asia/Tokyo
     volumes:
       - ./docker/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./docker/mysql/data:/var/lib/mysql
 
   api:
     build: api/.
@@ -42,6 +43,6 @@ services:
     image: redis:6.0.6-alpine
     container_name: influ-dojo-redis
     ports:
-      - 6379:6379
+      - 6380:6379
     volumes:
       - ./docker/redis:/data

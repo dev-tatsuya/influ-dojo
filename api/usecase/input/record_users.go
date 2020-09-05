@@ -23,48 +23,42 @@ func (in *RecordUsers) RecordUsers() error {
 		return err
 	}
 
-	IDs, err := in.UserRepo.LoadIDs()
+	loadedIDs, err := in.UserRepo.LoadIDs()
 	if err != nil {
 		return err
 	}
 
 	for _, f := range latestFollowers {
-		if contains(IDs, f.UserID) {
-			IDs = remove(IDs, f.UserID)
+		if contains(loadedIDs, f.UserID) {
+			loadedIDs = remove(loadedIDs, f.UserID)
 			continue
 		}
 
 		if err := in.UserRepo.Save(f.User); err != nil {
 			return err
 		}
-
 		if err := in.DailyWorkRepo.Save(f.Work); err != nil {
 			return err
 		}
-
 		if err := in.DailyResultRepo.Save(f.Result); err != nil {
 			return err
 		}
-
 		if err := in.WeeklyWorkRepo.Save(f.Work); err != nil {
 			return err
 		}
-
 		if err := in.WeeklyResultRepo.Save(f.Result); err != nil {
 			return err
 		}
-
 		if err := in.MonthlyWorkRepo.Save(f.Work); err != nil {
 			return err
 		}
-
 		if err := in.MonthlyResultRepo.Save(f.Result); err != nil {
 			return err
 		}
 	}
 
-	log.Printf("削除対象IDs: %v", IDs)
-	for _, userID := range IDs {
+	log.Printf("削除対象IDs: %v", loadedIDs)
+	for _, userID := range loadedIDs {
 		if err := in.UserRepo.Delete(userID); err != nil {
 			return err
 		}
