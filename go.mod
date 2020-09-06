@@ -14,6 +14,8 @@ require (
 	github.com/golang/mock v1.4.3
 	github.com/jinzhu/gorm v1.9.15
 	github.com/labstack/echo/v4 v4.1.16
+	github.com/onsi/ginkgo v1.10.1
+	github.com/onsi/gomega v1.7.0
 	github.com/robfig/cron/v3 v3.0.1
 	go.uber.org/multierr v1.5.0
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
