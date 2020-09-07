@@ -12,6 +12,7 @@ import (
 
 func MakeClassifyTweetsHandler(
 	client client.Tweet,
+	user repository.User,
 	dailyWork repository.Work,
 	weeklyWork repository.Work,
 	monthlyWork repository.Work,
@@ -19,6 +20,7 @@ func MakeClassifyTweetsHandler(
 	return func(c echo.Context) error {
 		in := &input.ClassifyTweets{
 			TweetClient:     client,
+			UserRepo:        user,
 			DailyWorkRepo:   dailyWork,
 			WeeklyWorkRepo:  weeklyWork,
 			MonthlyWorkRepo: monthlyWork,
@@ -34,12 +36,14 @@ func MakeClassifyTweetsHandler(
 
 func ClassifyDailyTweets(
 	client client.Tweet,
+	user repository.User,
 	dailyWork repository.Work,
 	weeklyWork repository.Work,
 	monthlyWork repository.Work,
 ) {
 	in := &input.ClassifyTweets{
 		TweetClient:     client,
+		UserRepo:        user,
 		DailyWorkRepo:   dailyWork,
 		WeeklyWorkRepo:  weeklyWork,
 		MonthlyWorkRepo: monthlyWork,

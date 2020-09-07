@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"influ-dojo/api/api"
-	dataModel "influ-dojo/api/infrastructure/persistence/model"
 	appLog "influ-dojo/api/log"
 	"log"
 	"math/rand"
@@ -43,16 +42,6 @@ func main() {
 		}
 		log.Printf("close mdm database")
 	}()
-
-	db.AutoMigrate(
-		&dataModel.User{},
-		&dataModel.DailyWork{},
-		&dataModel.DailyResult{},
-		&dataModel.WeeklyWork{},
-		&dataModel.WeeklyResult{},
-		&dataModel.MonthlyWork{},
-		&dataModel.MonthlyResult{},
-	)
 
 	rd, err := api.ConnectRedis(cfg)
 	if err != nil {

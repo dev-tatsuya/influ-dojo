@@ -26,7 +26,7 @@ func setRouting(d *Dependency, e *echo.Echo) {
 	webAPI.GET("/followers", handler.MakeFollowersHandler(d.FollowerClient))
 	webAPI.GET("/participant", handler.MakeParticipantHandler(d.UserRepo))
 	webAPI.POST("/favorite", handler.MakeFavoriteHandler(d.BotClient))
-	webAPI.POST("/classify/tweets", handler.MakeClassifyTweetsHandler(d.TweetClient, d.DailyWorkRepo, d.WeeklyWorkRepo, d.MonthlyWorkRepo))
+	webAPI.POST("/classify/tweets", handler.MakeClassifyTweetsHandler(d.TweetClient, d.UserRepo, d.DailyWorkRepo, d.WeeklyWorkRepo, d.MonthlyWorkRepo))
 	webAPI.POST("/calc/point/daily", handler.MakeCalcPointHandler(d.DailyWorkRepo))
 	webAPI.POST("/calc/point/weekly", handler.MakeCalcPointHandler(d.WeeklyWorkRepo))
 	webAPI.POST("/calc/point/monthly", handler.MakeCalcPointHandler(d.MonthlyWorkRepo))
@@ -48,9 +48,9 @@ func setRouting(d *Dependency, e *echo.Echo) {
 		d.WeeklyWorkRepo, d.WeeklyResultRepo, d.MonthlyWorkRepo, d.MonthlyResultRepo))
 
 	tweet := webAPI.Group("/tweet")
-	tweet.POST("/daily", handler.MakeTweetHandler(d.BotClient, d.DailyWorkRepo, d.DailyResultRepo))
-	tweet.POST("/weekly", handler.MakeTweetHandler(d.BotClient, d.WeeklyWorkRepo, d.WeeklyResultRepo))
-	tweet.POST("/monthly", handler.MakeTweetHandler(d.BotClient, d.MonthlyWorkRepo, d.MonthlyResultRepo))
+	tweet.POST("/daily", handler.MakeTweetHandler(d.BotClient, d.RankingQuery))
+	tweet.POST("/weekly", handler.MakeTweetHandler(d.BotClient, d.RankingQuery))
+	tweet.POST("/monthly", handler.MakeTweetHandler(d.BotClient, d.RankingQuery))
 }
 
 func StartWebServer(e *echo.Echo, cfg *Config) error {

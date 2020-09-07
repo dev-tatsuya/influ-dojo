@@ -2,9 +2,9 @@
 
 package client
 
-import "influ-dojo/api/domain/model"
+import "influ-dojo/api/usecase/dto"
 
 type Bot interface {
-	Tweet(work []*model.Work, result []*model.Result, path string) error
+	Tweet(top3 *dto.Top3, path string) error
 	Favorite() error
 }

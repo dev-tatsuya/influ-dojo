@@ -19,6 +19,10 @@ func NewTweet(accessToken, accessTokenSecret, consumerKey, consumerSecret string
 }
 
 func (client *tweet) FetchTweetsFromScreenName(screenName string, count int) ([]*model.Tweet, error) {
+	if count > 100 {
+		count = 100
+	}
+
 	values := url.Values{}
 	values.Add("count", strconv.Itoa(count))
 	//TODO 1日100ツイート以上を考慮していない

@@ -3,7 +3,7 @@ package model
 import "influ-dojo/api/domain/utils"
 
 type Result struct {
-	ScreenName             string
+	UserID                 string
 	FollowersCount         int
 	IncreaseFollowersCount int
 	Point                  int

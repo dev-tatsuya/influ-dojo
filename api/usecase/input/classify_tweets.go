@@ -7,10 +7,11 @@ import (
 )
 
 type ClassifyTweets struct {
-	TweetClient     client.Tweet    `json:"-"`
-	DailyWorkRepo   repository.Work `json:"-"`
-	WeeklyWorkRepo  repository.Work `json:"-"`
-	MonthlyWorkRepo repository.Work `json:"-"`
+	TweetClient     client.Tweet
+	UserRepo        repository.User
+	DailyWorkRepo   repository.Work
+	WeeklyWorkRepo  repository.Work
+	MonthlyWorkRepo repository.Work
 }
 
 func (in *ClassifyTweets) Classify() error {
@@ -24,7 +25,12 @@ func (in *ClassifyTweets) Classify() error {
 			continue
 		}
 
-		screenName := work.ScreenName
+		user, err := in.UserRepo.LoadByID(work.UserID)
+		if err != nil {
+			return err
+		}
+
+		screenName := user.ScreenName
 		tweets, err := in.TweetClient.FetchTweetsFromScreenName(screenName, work.IncreaseTweetsCount)
 		if err != nil {
 			log.Printf("failed to fetch tweets from %s, error: %+v", screenName, err)
@@ -60,11 +66,11 @@ func (in *ClassifyTweets) Classify() error {
 			return err
 		}
 
-		if err := addTweetsCount(in.WeeklyWorkRepo, screenName, myTweetCount, repliesCount); err != nil {
+		if err := addTweetsCount(in.WeeklyWorkRepo, user.UserID, myTweetCount, repliesCount); err != nil {
 			return err
 		}
 
-		if err := addTweetsCount(in.MonthlyWorkRepo, screenName, myTweetCount, repliesCount); err != nil {
+		if err := addTweetsCount(in.MonthlyWorkRepo, user.UserID, myTweetCount, repliesCount); err != nil {
 			return err
 		}
 	}
@@ -72,8 +78,8 @@ func (in *ClassifyTweets) Classify() error {
 	return nil
 }
 
-func addTweetsCount(repo repository.Work, screenName string, myTweetCount, repliesCount int) error {
-	entity, err := repo.LoadByScreenName(screenName)
+func addTweetsCount(repo repository.Work, userID string, myTweetCount, repliesCount int) error {
+	entity, err := repo.LoadByID(userID)
 	if err != nil {
 		return err
 	}

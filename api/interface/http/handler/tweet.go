@@ -2,25 +2,24 @@ package handler
 
 import (
 	"influ-dojo/api/domain/client"
-	"influ-dojo/api/domain/repository"
 	"influ-dojo/api/usecase/input"
+	queryService "influ-dojo/api/usecase/query"
 	"log"
 	"net/http"
+	"path"
 
 	"github.com/labstack/echo/v4"
 )
 
 func MakeTweetHandler(
 	bot client.Bot,
-	work repository.Work,
-	result repository.Result,
+	ranking queryService.Ranking,
 ) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		in := input.Tweet{
-			Path:       c.Path(),
-			Bot:        bot,
-			WorkRepo:   work,
-			ResultRepo: result,
+			Path:    path.Base(c.Path()),
+			Bot:     bot,
+			Ranking: ranking,
 		}
 
 		if err := in.Tweet(); err != nil {
@@ -33,15 +32,13 @@ func MakeTweetHandler(
 
 func Tweet(
 	bot client.Bot,
-	work repository.Work,
-	result repository.Result,
+	ranking queryService.Ranking,
 	path string,
 ) {
 	in := input.Tweet{
-		Path:       path,
-		Bot:        bot,
-		WorkRepo:   work,
-		ResultRepo: result,
+		Path:    path,
+		Bot:     bot,
+		Ranking: ranking,
 	}
 
 	if err := in.Tweet(); err != nil {

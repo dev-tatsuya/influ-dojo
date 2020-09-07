@@ -23,19 +23,19 @@ func (in *Record) Record() error {
 		//TODO フォロワーの数だけDB接続してしまう。+QueryServiceでまとめて取得したい
 		user, err := in.UserRepo.LoadByID(f.User.UserID)
 		if err != nil {
-			log.Printf("failed to load user by %s: error: %+v", f.UserID, err)
+			log.Printf("failed to load user by %s: error: %+v", f.User.UserID, err)
 			continue
 		}
 
-		work, err := in.WorkRepo.LoadByScreenName(user.ScreenName)
+		work, err := in.WorkRepo.LoadByID(user.UserID)
 		if err != nil {
-			log.Printf("failed to load wok by %s: error: %+v", user.ScreenName, err)
+			log.Printf("failed to load wok by %s: error: %+v", user.UserID, err)
 			continue
 		}
 
-		result, err := in.ResultRepo.LoadByScreenName(user.ScreenName)
+		result, err := in.ResultRepo.LoadByID(user.UserID)
 		if err != nil {
-			log.Printf("failed to load result by %s: error: %+v", user.ScreenName, err)
+			log.Printf("failed to load result by %s: error: %+v", user.UserID, err)
 			continue
 		}
 

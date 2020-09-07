@@ -3,7 +3,7 @@ package model
 import "influ-dojo/api/domain/model"
 
 type DailyWork struct {
-	ScreenName             string `gorm:"primary_key"`
+	UserID                 string `gorm:"primary_key"`
 	TweetsCount            int
 	IncreaseTweetsCount    *int
 	MyTweetsCount          *int
@@ -17,7 +17,7 @@ type DailyWork struct {
 }
 
 func (mdl *DailyWork) IsNew() bool {
-	return len(mdl.ScreenName) == 0
+	return len(mdl.UserID) == 0
 }
 
 func (mdl *DailyWork) AttachID() error {
@@ -44,7 +44,7 @@ func (mdl *DailyWork) MakeEntity() *model.Work {
 	}
 
 	return &model.Work{
-		ScreenName:             mdl.ScreenName,
+		UserID:                 mdl.UserID,
 		TweetsCount:            mdl.TweetsCount,
 		IncreaseTweetsCount:    *mdl.IncreaseTweetsCount,
 		MyTweetsCount:          *mdl.MyTweetsCount,
@@ -59,7 +59,7 @@ func (mdl *DailyWork) MakeEntity() *model.Work {
 
 func NewDailyWork(entity *model.Work) *DailyWork {
 	return &DailyWork{
-		ScreenName:             entity.ScreenName,
+		UserID:                 entity.UserID,
 		TweetsCount:            entity.TweetsCount,
 		IncreaseTweetsCount:    &entity.IncreaseTweetsCount,
 		MyTweetsCount:          &entity.MyTweetsCount,

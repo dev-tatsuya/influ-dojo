@@ -2,26 +2,20 @@ package input
 
 import (
 	"influ-dojo/api/domain/client"
-	"influ-dojo/api/domain/repository"
+	queryService "influ-dojo/api/usecase/query"
 )
 
 type Tweet struct {
-	Path       string            `json:"-"`
-	Bot        client.Bot        `json:"-"`
-	WorkRepo   repository.Work   `json:"-"`
-	ResultRepo repository.Result `json:"-"`
+	Path    string
+	Bot     client.Bot
+	Ranking queryService.Ranking
 }
 
 func (in *Tweet) Tweet() error {
-	works, err := in.WorkRepo.LoadTop3()
+	top3, err := in.Ranking.LoadRankingTop3()
 	if err != nil {
 		return err
 	}
 
-	results, err := in.ResultRepo.LoadTop3()
-	if err != nil {
-		return err
-	}
-
-	return in.Bot.Tweet(works, results, in.Path)
+	return in.Bot.Tweet(top3, in.Path)
 }

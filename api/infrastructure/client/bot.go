@@ -3,11 +3,10 @@ package client
 import (
 	"fmt"
 	"influ-dojo/api/domain/client"
-	"influ-dojo/api/domain/model"
+	"influ-dojo/api/usecase/dto"
 	"math"
 	"math/rand"
 	"net/url"
-	"path"
 	"strconv"
 	"time"
 
@@ -30,7 +29,7 @@ func NewBot(accessToken, accessTokenSecret, consumerKey, consumerSecret string) 
 	}
 }
 
-func (b *bot) Tweet(works []*model.Work, results []*model.Result, pathStr string) error {
+func (b *bot) Tweet(top3 *dto.Top3, path string) error {
 	workPoint1 := 0.0
 	workPoint2 := 0.0
 	workPoint3 := 0.0
@@ -44,29 +43,46 @@ func (b *bot) Tweet(works []*model.Work, results []*model.Result, pathStr string
 	resultName2 := ""
 	resultName3 := ""
 
-	if len(works) >= 1 {
-		workPoint1 = works[0].Point
-		workName1 = works[0].ScreenName
-	}
-	if len(results) >= 1 {
-		resultPoint1 = results[0].Point
-		resultName1 = results[0].ScreenName
-	}
-	if len(works) >= 2 {
-		workPoint2 = works[1].Point
-		workName2 = works[1].ScreenName
-	}
-	if len(results) >= 2 {
-		resultPoint2 = results[1].Point
-		resultName2 = results[1].ScreenName
-	}
-	if len(works) >= 3 {
-		workPoint3 = works[2].Point
-		workName3 = works[2].ScreenName
-	}
-	if len(results) >= 3 {
-		resultPoint3 = results[2].Point
-		resultName3 = results[2].ScreenName
+	switch path {
+	case "daily":
+		workPoint1 = top3.DailyWorkUsers[0].Point
+		workPoint2 = top3.DailyWorkUsers[1].Point
+		workPoint3 = top3.DailyWorkUsers[2].Point
+		workName1 = top3.DailyWorkUsers[0].ScreenName
+		workName2 = top3.DailyWorkUsers[1].ScreenName
+		workName3 = top3.DailyWorkUsers[2].ScreenName
+		resultPoint1 = int(top3.DailyResultUsers[0].Point)
+		resultPoint2 = int(top3.DailyResultUsers[1].Point)
+		resultPoint3 = int(top3.DailyResultUsers[2].Point)
+		resultName1 = top3.DailyResultUsers[0].ScreenName
+		resultName2 = top3.DailyResultUsers[1].ScreenName
+		resultName3 = top3.DailyResultUsers[2].ScreenName
+	case "weekly":
+		workPoint1 = top3.WeeklyWorkUsers[0].Point
+		workPoint2 = top3.WeeklyWorkUsers[1].Point
+		workPoint3 = top3.WeeklyWorkUsers[2].Point
+		workName1 = top3.WeeklyWorkUsers[0].ScreenName
+		workName2 = top3.WeeklyWorkUsers[1].ScreenName
+		workName3 = top3.WeeklyWorkUsers[2].ScreenName
+		resultPoint1 = int(top3.WeeklyResultUsers[0].Point)
+		resultPoint2 = int(top3.WeeklyResultUsers[1].Point)
+		resultPoint3 = int(top3.WeeklyResultUsers[2].Point)
+		resultName1 = top3.WeeklyResultUsers[0].ScreenName
+		resultName2 = top3.WeeklyResultUsers[1].ScreenName
+		resultName3 = top3.WeeklyResultUsers[2].ScreenName
+	case "monthly":
+		workPoint1 = top3.MonthlyWorkUsers[0].Point
+		workPoint2 = top3.MonthlyWorkUsers[1].Point
+		workPoint3 = top3.MonthlyWorkUsers[2].Point
+		workName1 = top3.MonthlyWorkUsers[0].ScreenName
+		workName2 = top3.MonthlyWorkUsers[1].ScreenName
+		workName3 = top3.MonthlyWorkUsers[2].ScreenName
+		resultPoint1 = int(top3.MonthlyResultUsers[0].Point)
+		resultPoint2 = int(top3.MonthlyResultUsers[1].Point)
+		resultPoint3 = int(top3.MonthlyResultUsers[2].Point)
+		resultName1 = top3.MonthlyResultUsers[0].ScreenName
+		resultName2 = top3.MonthlyResultUsers[1].ScreenName
+		resultName3 = top3.MonthlyResultUsers[2].ScreenName
 	}
 
 	body := fmt.Sprintf(`
@@ -85,7 +101,7 @@ func (b *bot) Tweet(works []*model.Work, results []*model.Result, pathStr string
 ▼ 4位以下はコチラ ▼
 https://influ-dojo.work
 `,
-		period[path.Base(pathStr)], time.Now().Format("1/2 15:04"),
+		period[path], time.Now().Format("1/2 15:04"),
 		workPoint1, workName1, workPoint2, workName2, workPoint3, workName3,
 		resultPoint1, resultName1, resultPoint2, resultName2, resultPoint3, resultName3,
 	)

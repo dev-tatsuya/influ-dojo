@@ -6,7 +6,7 @@ import (
 )
 
 type Work struct {
-	ScreenName             string
+	UserID                 string
 	TweetsCount            int
 	IncreaseTweetsCount    int
 	MyTweetsCount          int

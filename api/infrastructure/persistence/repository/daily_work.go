@@ -46,23 +46,9 @@ func (repo *dailyWork) LoadOrderByRanking() ([]*domainModel.Work, error) {
 	return entities, nil
 }
 
-func (repo *dailyWork) LoadTop3() ([]*domainModel.Work, error) {
-	mdls := make([]*dataModel.DailyWork, 0)
-	if err := repo.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
-		return nil, err
-	}
-
-	entities := make([]*domainModel.Work, 0)
-	for _, mdl := range mdls {
-		entities = append(entities, mdl.MakeEntity())
-	}
-
-	return entities, nil
-}
-
-func (repo *dailyWork) LoadByScreenName(screenName string) (*domainModel.Work, error) {
+func (repo *dailyWork) LoadByID(id string) (*domainModel.Work, error) {
 	mdl := new(dataModel.DailyWork)
-	if err := repo.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
+	if err := repo.DB.Where("user_id = ?", id).First(mdl).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, apperr.ErrRecordNotFound
 		}

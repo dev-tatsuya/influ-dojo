@@ -32,23 +32,9 @@ func (repo *dailyResult) LoadOrderByRanking() ([]*domainModel.Result, error) {
 	return entities, nil
 }
 
-func (repo *dailyResult) LoadTop3() ([]*domainModel.Result, error) {
-	mdls := make([]*dataModel.DailyResult, 0)
-	if err := repo.DB.Order("point desc").Limit(3).Find(&mdls).Error; err != nil {
-		return nil, err
-	}
-
-	entities := make([]*domainModel.Result, 0)
-	for _, mdl := range mdls {
-		entities = append(entities, mdl.MakeEntity())
-	}
-
-	return entities, nil
-}
-
-func (repo *dailyResult) LoadByScreenName(screenName string) (*domainModel.Result, error) {
+func (repo *dailyResult) LoadByID(id string) (*domainModel.Result, error) {
 	mdl := new(dataModel.DailyResult)
-	if err := repo.DB.Where("screen_name = ?", screenName).First(mdl).Error; err != nil {
+	if err := repo.DB.Where("user_id = ?", id).First(mdl).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, errors.New("not found")
 		}
@@ -61,7 +47,7 @@ func (repo *dailyResult) LoadByScreenName(screenName string) (*domainModel.Resul
 
 func (repo *dailyResult) Save(entity *domainModel.Result) error {
 	mdl := &dataModel.DailyResult{
-		ScreenName:             entity.ScreenName,
+		UserID:                 entity.UserID,
 		FollowersCount:         entity.FollowersCount,
 		IncreaseFollowersCount: &entity.IncreaseFollowersCount,
 		Point:                  &entity.Point,

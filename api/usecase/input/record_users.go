@@ -29,8 +29,8 @@ func (in *RecordUsers) RecordUsers() error {
 	}
 
 	for _, f := range latestFollowers {
-		if contains(loadedIDs, f.UserID) {
-			loadedIDs = remove(loadedIDs, f.UserID)
+		if contains(loadedIDs, f.User.UserID) {
+			loadedIDs = remove(loadedIDs, f.User.UserID)
 			continue
 		}
 
