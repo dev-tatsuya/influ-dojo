@@ -1,4 +1,4 @@
 development:
   dialect: mysql
   dir: migrations
-  datasource: app:password@tcp(127.0.0.1:3307)/influ_dojo_db?charset=utf8mb4&collation=utf8mb4_general_ci&parseTime=true
+  datasource: app:password@tcp(127.0.0.1:3307)/influ_dojo_db?parseTime=true&loc=Asia%2FTokyo

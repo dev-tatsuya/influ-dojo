@@ -143,7 +143,7 @@ func (b *bot) Favorite() error {
 		duration := int64(math.Ceil((rand.Float64()*2.0 + 2.0) * 1000)) //3s±1s
 		time.Sleep(time.Duration(duration) * time.Millisecond)
 		if _, err := b.api.Favorite(id); err != nil {
-			if err.Error() == "Get https://api.twitter.com/1.1/favorites/create.json returned status 403, {\"errors\":[{\"code\":139,\"message\":\"You have already favorited this status.\"}]}" {
+			if err.Error() == CODE139 || err.Error() == CODE144 {
 				continue
 			}
 
@@ -153,3 +153,8 @@ func (b *bot) Favorite() error {
 
 	return nil
 }
+
+const (
+	CODE139 = "Get https://api.twitter.com/1.1/favorites/create.json returned status 403, {\"errors\":[{\"code\":139,\"message\":\"You have already favorited this status.\"}]}"
+	CODE144 = "Get https://api.twitter.com/1.1/favorites/create.json returned status 404, {\"errors\":[{\"code\":144,\"message\":\"No status found with that ID.\"}]}"
+)
