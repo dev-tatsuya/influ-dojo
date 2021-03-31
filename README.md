@@ -1,4 +1,4 @@
-# influ-dojo
+# influ-dojo(Close)
 
 Twitterで競い合いながらインフルエンサーを目指すことができるランキングサイトです。
 
